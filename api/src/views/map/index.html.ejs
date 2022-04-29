@@ -1,0 +1,61 @@
+<a href="<%= paths.newPos %>">Agregar una ubicación</a>
+<a href="<%= paths.newPing %>">Enviar un Ping</a>
+
+<div id="map" style="height: 450px; width: 450px;"></div>
+
+<!-- https://stackoverflow.com/questions/28603658/can-a-js-script-get-a-variable-written-in-a-ejs-context-page-within-the-same-fil segunda respuesta -->
+<div id="data" data-test="<%= positionsUser %>"></div>
+<div id="dataN" data-test="<%= positionsNotUser %>"></div>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+<script>
+   
+    var map = L.map('map').setView([-33.498532, -70.614023], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    
+    // https://github.com/pointhi/leaflet-color-markers
+    var greenIcon = new L.Icon({
+	iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+	shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	iconSize: [25, 41],
+	iconAnchor: [12, 41],
+	popupAnchor: [1, -34],
+	shadowSize: [41, 41]
+});
+    
+    const dataN = document.getElementById('dataN').dataset.test
+    // https://stackoverflow.com/questions/29032525/how-to-access-first-element-of-json-object-array
+    const  getpositionsN = JSON.parse(dataN)
+    console.log(getpositionsN[0])
+    getpositionsN.forEach(pos => {
+        L.marker([pos.long, pos.lat], {icon: greenIcon}).addTo(map)
+        .bindPopup(`${pos.title}, creado por ${pos.user.nickname}`)
+        .openPopup();
+    });
+    
+    const data = document.getElementById('data').dataset.test
+    // https://stackoverflow.com/questions/29032525/how-to-access-first-element-of-json-object-array
+    const  getpositions = JSON.parse(data)
+    console.log(getpositions[0])
+    getpositions.forEach(pos => {
+        L.marker([pos.long, pos.lat]).addTo(map)
+        .bindPopup(pos.title)
+        .openPopup();
+    });
+
+    
+    
+    var popup = L.popup();
+
+    function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+    }
+
+    map.on('click', onMapClick);
+</script>

@@ -1,0 +1,13 @@
+<form action="<%= newPingPath %>" method="post">
+    <% if (locals.error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+     <div class="field">
+      <label for="nickname">Nickname de tu futuro amigo</label>
+      <input type="text" id="nickname" name="nickname" />
+    </div>
+        
+    <div class="actions">
+      <input type="submit" value="Enviar Ping" />
+    </div>
+</form>

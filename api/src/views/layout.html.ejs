@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>FriendsMap</title>
+    <% if (env !== 'development') { %>
+      <link rel="stylesheet" href="<%= assetPath('app.css') %>">
+    <% } %>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+  </head>
+
+  <body>
+    <header>
+      <!-- <div id="logo">
+        <img src="<%= assetPath('logo.png') %>" alt="Logo" />
+      </div> -->
+      <div class="user-controls">
+        <% if (locals.currentUser) { %>
+          <span>Hola <%= currentUser.nickname %>!</span>
+          <a href="<%= paths.principal %>">Inicio</a>
+          <a href="<%= paths.mapIndex %>">Al Mapa</a>
+          <a href="<%= paths.myProfile %>">Tu Perfil</a>
+          <form action="<%= paths.destroySession %>" method="post">
+            <input type="hidden" name="_method" value="delete" />
+            <input type="submit" value="Salir" />          
+          </form>
+        <% } else { %>
+          <a href="<%= paths.newSession %>">Iniciar sesión</a>
+          <a href="<%= paths.newUser %>">Crear una cuenta</a>
+        <% } %>
+       </div>
+    </header>
+    <%- body %>
+    
+    <script src="<%= assetPath('app.js') %>"></script>
+  </body>
+
+</html>

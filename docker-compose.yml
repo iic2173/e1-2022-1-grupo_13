@@ -29,8 +29,13 @@ services:
     volumes:
       - /app/node_modules
       - ./frontend:/app
+    environment:
+      - PORT=8080
+      - REACT_APP_API_URL=http://localhost:3000
     ports:
       - "8080:8080"  
+    networks:
+      - app-network
 
   db:
     container_name: "postgis_server"

@@ -17,7 +17,7 @@ COPY . .
 
 ENTRYPOINT [ "sh", "/api/entrypoint.sh" ]
 # RUN git clone https://github.com/vishnubob/wait-for-it.git
-# EXPOSE 5000
+EXPOSE 3000
 
 # CMD [ "node", "index.js" ]
 # CMD ["sh", "-c", "npm install yarn && yarn sequelize db:migrate && yarn sequelize db:seed && yarn start"]

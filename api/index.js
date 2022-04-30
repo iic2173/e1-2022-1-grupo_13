@@ -3,7 +3,7 @@
 const app = require('./src/app');
 const db = require('./src/models');
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 const host = process.env.DB_HOST || '127.0.0.1';
 
 db.sequelize

@@ -1,5 +1,8 @@
+require('dotenv').config();
 const KoaRouter = require('koa-router');
+const jwt = require('koa-jwt');
 const { setCurrentUser } = require('../../middlewares/auth');
+const { Sequelize } = require("sequelize");
 
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
 
@@ -10,7 +13,7 @@ const PositionSerializer = new JSONAPISerializer( 'position', {
 
 const router = new KoaRouter();
 
-router.post('api.map.index', '/', async(ctx) => {
+router.get('api.map.index', '/', async(ctx) => {
     // const id = ctx.state.currentUser.id;
     // const positionsListUser = await ctx.orm.position.findAll({
     //   attributes: [
@@ -26,23 +29,13 @@ router.post('api.map.index', '/', async(ctx) => {
     //     userId: id,
     //   },
     // })  
-    const positionsList = await ctx.orm.position.findAll({
-      attributes: [
-        'title', 
-        [Sequelize.fn('st_x', Sequelize.col('geography')), 'long'],
-        [Sequelize.fn('ST_Y', Sequelize.col('geography')), 'lat'],
-        ],
-      include: [{
-        model: ctx.orm.user,
-        required: true
-      }],
-    })
+    const positionsList = await ctx.orm.position.findAll()
     // await ctx.render('map/index', {
     //   // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
     //   positionsUser: JSON.stringify(positionsListUser, null, 2),
     //   positionsNotUser: JSON.stringify(positionsList, null, 2)
     //   }); 
-    ctx.body = PositionSerializer(positionsList)
+    ctx.body = PositionSerializer.serialize(positionsList)
 });
 
 router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
@@ -62,9 +55,9 @@ router.post('api.map.create.position', '/new', async(ctx) =>{
     }
 });
 
-router.post('map.create.ping', '/ping', async(ctx) =>{
+router.post('api.map.create.ping', '/ping', async(ctx) =>{
     const { currentUser } = ctx.state;
-    const {friendId} = (ctx.request.body);
+    const { friendId } = ctx.request.body;
     const friend = await ctx.orm.user.findOne({
         where: {
           id: friendId
@@ -78,5 +71,24 @@ router.post('map.create.ping', '/ping', async(ctx) =>{
         ctx.throw(400, `Ups! \n${error}`);
         };
 });
+
+router.post('api.map.compare', '/compare', async(ctx) => {
+    const { currentUser } = ctx.state;
+    const { idsArray } = ctx.request.body;
+    let resultDict = {} 
+
+    const UserPositionsList = await ctx.orm.position.findAll({ where: {userId: currentUser.id} });
+
+    resultDict[currentUser.id] = UserPositionsList;
+
+
+    idsArray.forEach( async(id) => {
+        const positionsList = await ctx.orm.position.findAll({ where: {userId: id}
+          });
+        resultDict[id] = positionsList;
+    })
+
+    
+})
 
 module.exports = router;

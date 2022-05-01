@@ -1,0 +1,26 @@
+<form action="<%= newPosPath %>" method="post">
+    <% if (locals.errors) { %>
+      Tienes que arreglar los siguientes errores:
+      <ul>
+        <% errors.forEach(error => { %>
+          <li><%= error.message %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+  
+    <div class="field">
+      <label for="title">Titulo de tu Ubicación</label>
+      <input type="text" id="title" name="title" value="<%= position.title %>" />
+    </div>
+    <div class="field">
+        <label for="lat">Latitud de tu Ubicación</label>
+        <input type="text" id="lat" name="title" value="<%= position.lat %>" />
+    </div>
+    <div class="field">
+        <label for="long">Titulo de tu Ubicación</label>
+        <input type="text" id="long" name="title" value="<%= position.long %>" />
+      </div>
+    <div class="actions">
+      <input type="submit" value="Registrarme" />
+    </div>
+  </form>

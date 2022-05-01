@@ -1,0 +1,72 @@
+version: "3.4"
+
+services:
+  api:
+    container_name: "friends_map"
+    build: 
+      context: ./api
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    command: "npm start"
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    networks:
+      - app-network
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgis_server
+      - JWT_SECRET=${JWT_SECRET}
+
+  front:
+    container_name: "frontend"
+    build:
+      context: ./frontend
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    environment:
+      - PORT=8080
+      - REACT_APP_API_URL=http://localhost:3000
+    ports:
+      - "8080:8080"  
+    networks:
+      - app-network
+
+  db:
+    container_name: "postgis_server"
+    image: mdillon/postgis:latest
+    restart: always    
+    ports: 
+    - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_NAME}"
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+      - api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  postgres_data:
+    

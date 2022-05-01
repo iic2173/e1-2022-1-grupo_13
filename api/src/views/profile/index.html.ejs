@@ -1,0 +1,53 @@
+<h2>Tus datos: </h2>
+
+<div class="profile_info">
+      <p class="user_name">Nickname: <%= user.nickname %></p>
+      <p class="email">Email: <%= user.email %></p> 
+      <p class="phone">Phone Number: <%= user.phone_num %></p> 
+      <p class="telegram">Telegram User: <%= user.telegram_user %></p> 
+</div>
+
+<h2> Tus Pings Recibidos</h2>
+
+<table>
+    <thead>
+      <tr>
+        <th>Nickname</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Telegram User</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% userList.forEach( (user) => { %>
+        <tr>
+          <td><%= user.nickname %></td>
+          <td><%= user.email %></td>
+          <td><%= user.phone_num%></td>
+          <td><%= user.telegram_user%></td>
+        </tr>
+      <% }) %>
+    </tbody>
+</table>
+
+<h2> Tus Ubicaciones </h2>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Titulo</th>
+      <th>Longitud</th>
+      <th>Latitud</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% positionsList.forEach( (position) => { %>
+      <tr>
+        <td><%= position.title %></td>
+        <td><%= position.dataValues.long%></td>
+        <td><%= position.dataValues.lat%></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

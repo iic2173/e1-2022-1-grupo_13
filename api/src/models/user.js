@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.position);
     }
 
-    async checkpassword(password) {
+    async checkPassword(password) {
       return bcrypt.compare(password, this.password);
     }
   }

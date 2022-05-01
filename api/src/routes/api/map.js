@@ -2,7 +2,7 @@ require('dotenv').config();
 const KoaRouter = require('koa-router');
 const jwt = require('koa-jwt');
 const { setCurrentUser } = require('../../middlewares/auth');
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
 
@@ -75,19 +75,15 @@ router.post('api.map.create.ping', '/ping', async(ctx) =>{
 router.post('api.map.compare', '/compare', async(ctx) => {
     const { currentUser } = ctx.state;
     const { idsArray } = ctx.request.body;
-    let resultDict = {} 
+    idsArray.push(currentUser.id)
 
-    const UserPositionsList = await ctx.orm.position.findAll({ where: {userId: currentUser.id} });
+    const positionsList = await ctx.orm.position.findAll(
+      { where: { userId: {
+        [Op.or]: idsArray
+      }} });
 
-    resultDict[currentUser.id] = UserPositionsList;
 
-
-    idsArray.forEach( async(id) => {
-        const positionsList = await ctx.orm.position.findAll({ where: {userId: id} });
-        resultDict[id] = positionsList;
-    })
-
-    ctx.body = resultDict;
+    ctx.body = PositionSerializer.serialize(positionsList);
     
 })
 

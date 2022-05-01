@@ -4,20 +4,20 @@ function checkAuth(ctx, next) {
   return next();
 }
 
-async function setCurrentUser(ctx, next) {
-  if (ctx.session.currentUserId) {
-    ctx.state.currentUser = await ctx.orm.user.findByPk(ctx.session.currentUserId);
-  }
-  return next();
-}
-
-// async function apiSetCurrentUser(ctx, next) {
-//   const { authData } = ctx.state;
-//   if (authData) {
-//     ctx.state.currentUser = await ctx.orm.user.findByPk(authData.sub);
+// async function setCurrentUser(ctx, next) {
+//   if (ctx.session.currentUserId) {
+//     ctx.state.currentUser = await ctx.orm.user.findByPk(ctx.session.currentUserId);
 //   }
 //   return next();
 // }
+
+async function setCurrentUser(ctx, next) {
+  const { authData } = ctx.state;
+  if (authData) {
+    ctx.state.currentUser = await ctx.orm.user.findByPk(authData.sub);
+  }
+  return next();
+}
 
 module.exports = {
   checkAuth,

@@ -34,13 +34,13 @@ router.get("api.pings.list", "/received", async (ctx) => {
     ctx.throw(401, 'No iniciaste sesion.');
     }
     const id = ctx.state.currentUser.id
-    console.log(id)
+    // console.log(id)
     const ping = await ctx.orm.ping.findAll({
         where: {
             reciverId: id
         }
     });
-    console.log(ping)
+    // console.log(ping)
     ctx.body = ping;
 })
 

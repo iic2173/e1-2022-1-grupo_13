@@ -83,11 +83,11 @@ router.post('api.map.compare', '/compare', async(ctx) => {
 
 
     idsArray.forEach( async(id) => {
-        const positionsList = await ctx.orm.position.findAll({ where: {userId: id}
-          });
+        const positionsList = await ctx.orm.position.findAll({ where: {userId: id} });
         resultDict[id] = positionsList;
     })
 
+    ctx.body = resultDict;
     
 })
 

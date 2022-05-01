@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import PaginatedItems from '../../components/Users/UsersPaginate';
 import React, { useState, useEffect } from 'react';
+import config from '../../config';
 
 
 
@@ -13,7 +13,7 @@ const UserList = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('https://jsonplaceholder.typicode.com/users')
+    fetch(`${config.API_URL}/api/users`)
       .then((response) => {
         if (!response.ok) {
           setError(true);
@@ -42,12 +42,11 @@ const UserList = () => {
       ) : (
         <>
           <h2>Users</h2>
-          {users.map(({ id, name }) => (
+          {users.map(({ id, nickname }) => (
             <div key={id}>
-              <Link to={`/users/${id}`}>{name}</Link>
+              <Link to={`/users/${id}`}>{nickname}</Link>
             </div>
           ))}
-          <PaginatedItems itemsPerPage={4} items={users} />
 
         </>
       )}

@@ -64,10 +64,10 @@ router.post('api.map.create.position', '/new', async(ctx) =>{
 
 router.post('map.create.ping', '/ping', async(ctx) =>{
     const { currentUser } = ctx.state;
-    const {nickname} = (ctx.request.body);
+    const {friendId} = (ctx.request.body);
     const friend = await ctx.orm.user.findOne({
         where: {
-          nickname: nickname
+          id: friendId
         }
       });
     const ping = ctx.orm.ping.build({ userId: currentUser.id, reciverId: friend.id});

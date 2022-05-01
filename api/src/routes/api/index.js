@@ -4,10 +4,9 @@ const jwt = require('koa-jwt');
 const {
     setCurrentUser,
 } = require('../../middlewares/auth');
-const workouts = require('./workouts');
-const categories = require('./categories');
-const routines = require('./routines');
-const users = require('./users');
+const map = require('./map');
+const pings = require('./pingsJWT');
+const users = require('./usersJWT');
 const auth = require('./auth');
 
 const router = new KoaRouter({ prefix: '/api' });
@@ -18,9 +17,8 @@ router.get('/', (ctx) => {
 
 /* Unprotected routes */
 router.use('/auth', auth.routes());
-router.use('/workouts', workouts.routes());
-router.use('/categories', categories.routes());
-router.use('/routines', routines.routes());
+router.use('/map', map.routes());
+router.use('/pings', pings.routes());
 router.use('/users', users.routes());
 
 /* Protected routes */

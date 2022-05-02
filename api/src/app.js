@@ -17,7 +17,7 @@ const orm = require('./models');
 // App constructor
 const app = new Koa();
 
-app.use(cors({ origin: process.env.ORIGIN || 'http://localhost:80' }));
+app.use(cors({ origin: process.env.ORIGIN || 'http://localhost:8080' }));
 
 const developmentMode = app.env === 'development';
 const testMode = app.env === 'test';

@@ -41,6 +41,20 @@ function Navbar() {
               <Link to="register">Registrarse</Link>
             )}
           </li>
+          <li id="derecha">
+            {currentUser ? (
+
+              <Link to="/images">
+                <i className="far fa-user" />
+                {' '}
+                Agregar fotos
+              </Link>
+
+            ) : (
+
+              <p></p>
+            )}
+          </li>
                 </ul>
             </nav>
             </div>

@@ -7,6 +7,7 @@ import UserDetail from './views/User/UserDetail';
 import Login from './views/Login';
 import Register from './views/Register';
 import AuthContextProvider from './contexts/AuthContext';
+import AddPhoto from './components/AddPhoto';
 
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='register' element={<Register/>}/>
           <Route path='users' element={<UserList />} />
           <Route path='users/:id' element={<UserDetail />} />
+          <Route path='/images' element={<AddPhoto />} />
         </Routes>
       </main>
       </AuthContextProvider>

@@ -36,4 +36,12 @@ router.get('api.users.show', '/:id', async(ctx) =>{
     ctx.body = UserSerializer.serialize(user);
 });
 
+router.get('api.users.addpic', '/:id/images', async(ctx) =>{
+    const user = await ctx.orm.user.findByPk(ctx.params.id);
+    if (!user) {
+        ctx.throw(404, 'El usuario buscado no existe');
+    }
+    ctx.body = UserSerializer.serialize(user);
+});
+
 module.exports = router;

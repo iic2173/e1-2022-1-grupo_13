@@ -23,7 +23,7 @@ router.post('api.users.create', '/', async(ctx) => {
 
 router.get("api.users.list", "/", async (ctx) => {
     const users = await ctx.orm.user.findAll();
-    ctx.body = UserSerializer.serialize(users);
+    // ctx.body = UserSerializer.serialize(users);
     ctx.body = users;
 
 })

@@ -10,7 +10,7 @@ const JSONAPISerializer = require('jsonapi-serializer').Serializer
 const apiKey = `${process.env.API_WEATHER}`
 
 const weatherSerializer = new JSONAPISerializer( 'weather', {
-    attributes: ['coord', 'weather', 'main'],
+    attributes: ['coord', 'weather', 'main', 'name', 'sys'],
     keyForAttribute: 'camelCase',
 });
 
@@ -56,8 +56,8 @@ router.post('api.weather.position', '/', async(ctx) =>{
 
   const req = axios.get(url);
   const res = await req;
-  console.log(res.data.name);
-  ctx.body = res.data;
+  console.log(weatherSerializer.serialize(res.data).data.attributes.sys.country);
+  ctx.body = weatherSerializer.serialize(res.data);
 });
 
 

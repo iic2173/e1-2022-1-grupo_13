@@ -16,7 +16,7 @@ jobs:
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
       - image: circleci/node:12
-      - image: postgis:latest
+      - image: postgres:latest
         environment:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: root

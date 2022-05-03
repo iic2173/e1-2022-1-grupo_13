@@ -20,7 +20,7 @@ router.post('api.weather.position', '/', async(ctx) =>{
   // console.log(ctx.request.body);
   const { lat, long } = ctx.request.body;
   // console.log(lat, long);
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}`;
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}&units=metric`;
   // let weather;
   // const weather2 = request(url, function(err, response, body) {
 
@@ -56,7 +56,7 @@ router.post('api.weather.position', '/', async(ctx) =>{
 
   const req = axios.get(url);
   const res = await req;
-  console.log(res.data.coord);
+  console.log(res.data.name);
   ctx.body = res.data;
 });
 

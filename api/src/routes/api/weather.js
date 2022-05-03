@@ -7,7 +7,9 @@ const axios = require('axios');
 
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
 
-const apiKey = `${process.env.API_WEATHER}`
+const apiKey = {
+  API_KEY: process.env.API_WEATHER || '67077cb4162cba0ee986cfcd4fed2999',
+}
 
 const weatherSerializer = new JSONAPISerializer( 'weather', {
     attributes: ['coord', 'weather', 'main', 'name', 'sys'],
@@ -20,40 +22,8 @@ router.post('api.weather.position', '/', async(ctx) =>{
   // console.log(ctx.request.body);
   const { lat, long } = ctx.request.body;
   // console.log(lat, long);
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}&units=metric`;
-  // let weather;
-  // const weather2 = request(url, function(err, response, body) {
-
-  //   // On return, check the json data fetched
-  //   if (err) {
-  //       console.log(err);
-  //   } else {
-  //       const weather = JSON.parse(body);
-  //       console.log(weather.coord);
-  //       const w = JSON.stringify(body, null, 2);
-  //       // console.log(JSON.parse(w));
-  //       // const aux = weatherSerializer(body);
-  //       console.log(response);
-  //       return response; 
-  //   }
-  // });
-  // // const weather = fetch(url).then(resp => {return resp.json()});
-  // console.log(weather2);
-  // if (weather2 == undefined){
-  //   ctx.throw(400, 'No hemos podido encontrar la locación :(');
-  // }
-  // else{
-  //   console.log(typeof(weather2));
-  //   // const w2 = JSON.parse(weather2);
-  //   // console.log(typeof(w2));
-  //   console.log(weather2.body);
-  //   console.log(weather2.main);
-  //   console.log(weather2.weather);
-  //   ctx.status = 201;
-  //   ctx.body = weather2;
-  //   // ctx.body = weatherSerializer.serialize(weather2);
-  // }
-
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey.API_KEY}&units=metric`;
+  
   const req = axios.get(url);
   const res = await req;
   console.log(weatherSerializer.serialize(res.data).data.attributes.sys.country);

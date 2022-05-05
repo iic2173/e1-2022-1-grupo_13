@@ -19,11 +19,16 @@ import { element, elementType } from 'prop-types';
 import L from 'leaflet';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+const markerIcon = new L.Icon({
+  iconUrl: require("../../assets/images/marker.png"),
+  iconSize: [40, 40],
+  iconAnchor: [17, 46], //[left/right, top/bottom]
+  popupAnchor: [0, -46], //[left/right, top/bottom]
+});
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
-    shadowUrl: iconShadow
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -47,7 +52,7 @@ const PositionCompare = function PositionCompare() {
     const nickname_options = [];
     const map_coor = {};
     const user_coor = {};
-    const [count1, setCount] = useState(0);
+    const usernames = {};
   
   
     useEffect(() => {
@@ -86,6 +91,7 @@ const PositionCompare = function PositionCompare() {
     users.forEach(user => {
       let current = { value: user.id, label: user.nickname}
       nickname_options.push(current);
+      usernames[user.id] = user.nickname;
     });
     
   
@@ -162,7 +168,7 @@ const PositionCompare = function PositionCompare() {
                             name="nicknames"
                             options={nickname_options}
                             value={selectedOptions}
-                            isOptionDisabled={() => selectedOptions.length >= 5}
+                            //isOptionDisabled={() => selectedOptions.length >= 5}
                             onChange={(options) => {
                               setSelectedOptions(options);
                               form.setFieldValue(field.name, options.value);
@@ -178,20 +184,19 @@ const PositionCompare = function PositionCompare() {
   
               </Formik>
               <div id="workouts" className="container">
-                <p>Aqui van los mapas</p>
                 {Object.keys(positions2).map((id, position) => (
                   <div id="map">
-                    <p>hola</p>
-                    
+                    <p>Comparando con {usernames[id]}</p>
                     <MapContainer center={positions2[id][0].geography } zoom={13} scrollWheelZoom={true}>
                         <TileLayer 
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' 
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                             <LayersControl position="topright">
-                            <LayersControl.Overlay name="posiciones del usuario">
+                            <LayersControl.Overlay checked name={usernames[currentUser.id]}>
                             <LayerGroup>
                             {user_positions[currentUser.id].map((element,index) => (
-                              <Marker position={[element.geography[0], element.geography[1]]} id="map2" key={count}>
+                              <Marker position={[element.geography[0], element.geography[1]]} id="map2" key={count} icon={markerIcon}>
+                                {count += 1}
                               <Popup>
                                 <p>{element.title}</p>
                               </Popup>
@@ -199,10 +204,10 @@ const PositionCompare = function PositionCompare() {
                             ))}
                             </LayerGroup>
                         </LayersControl.Overlay>
-                        <LayersControl.Overlay name="posiciones del otro usuario">
+                        <LayersControl.Overlay checked name={usernames[id]}>
                         <LayerGroup>
                             {positions2[id].map( element => (
-                                <Marker position={[element.geography[0], element.geography[1]]} key="1" id="map" >
+                                <Marker position={[element.geography[0], element.geography[1]]} key={count} id="map" >
                                 {count += 1}
                                 <Popup>
                                   <p>{element.title}</p>

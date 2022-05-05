@@ -30,7 +30,7 @@ function Navbar() {
           <li id="derecha">
             {currentUser ? (
 
-              <Link to="/profile">
+              <Link to={`/users/${currentUser.id}`}>
                 <i className="far fa-user" />
                 {' '}
                 Mi Perfil

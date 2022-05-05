@@ -2,3 +2,8 @@
 @import './variables';
 @import './layout';
 @import './static';
+
+.leaflet-container {
+    width: 500px; 
+    height: 500px;
+  }

@@ -77,13 +77,28 @@ router.post('api.map.compare', '/compare', async(ctx) => {
     const { idsArray } = ctx.request.body;
     idsArray.push(currentUser.id)
 
+    let responseDict = {}
+    idsArray.forEach(element => {
+      responseDict[element] = [];
+    });
+
     const positionsList = await ctx.orm.position.findAll(
       { where: { userId: {
         [Op.or]: idsArray
       }} });
 
+    positionsList.forEach( element => {
+      let current_id = element["dataValues"]["userId"];
+      let sendable_obj = {
+        id: element["dataValues"]["id"],
+        "title": element["dataValues"]["title"], 
+        "geography": element["dataValues"]["geography"]["coordinates"],
+      }
 
-    ctx.body = PositionSerializer.serialize(positionsList);
+      responseDict[current_id].push(sendable_obj);
+    });
+
+    ctx.body = responseDict;
     
 })
 

@@ -21,22 +21,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=postgis_server
       - JWT_SECRET=${JWT_SECRET}
-
-  front:
-    container_name: "frontend"
-    build:
-      context: ./frontend
-    volumes:
-      - /app/node_modules
-      - ./frontend:/app
-    environment:
-      - PORT=8080
-      - REACT_APP_API_URL=http://localhost:3000
-    ports:
-      - "8080:8080"  
-    networks:
-      - app-network
-
   db:
     container_name: "postgis_server"
     image: mdillon/postgis:latest

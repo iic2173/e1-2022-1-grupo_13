@@ -11,6 +11,7 @@ import React, { useState, useEffect } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import Positions from './Positions';
 
 import L from 'leaflet';
 
@@ -144,6 +145,7 @@ const PositionIndex = function PositionIndex() {
                             ))}
                             <LocationMarkers />
                     </MapContainer>
+                    <Positions positions={positions} />
             </div>
       )
 }

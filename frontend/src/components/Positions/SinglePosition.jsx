@@ -6,8 +6,8 @@ function SinglePosition({ position }) {
   const [pos, setPos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const lat = position.lat;
-  const long = position.long;
+  const lat = position.geography[0]
+  const long = position.geography[1];
   
   useEffect(() =>{
     setLoading(true);
@@ -50,7 +50,7 @@ function SinglePosition({ position }) {
           <div>
             <li>
               <h4>{position.title}</h4>
-              <p>Ubicación Geografica: ({position.lat}, {position.long})</p>
+              <p>Ubicación Geografica: ({lat}, {long})</p>
               <p>Comuna/Ciudad en la que se encuentra: {pos?.name}</p>
               <p>País en el que se encuentra: {pos?.sys?.country}</p>
               <p>Temperatura Actual de la posición: {pos?.main?.temp}°C</p>

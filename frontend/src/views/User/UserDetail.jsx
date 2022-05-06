@@ -1,7 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import CreatePing from '../../components/Pings/CreatePing';
 import UserPings from '../../components/Pings/UserPings';
-import Locations from '../../components/Positions/Positions';
 import useAuth from '../../hooks/useAuth';
 import React, { useState, useEffect } from 'react';
 import config from '../../config';

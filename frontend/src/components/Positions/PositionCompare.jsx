@@ -2,25 +2,57 @@ import config from '../../config';
 
 // importar elementos leaflet
 import { MapContainer } from 'react-leaflet/MapContainer'
+import { Marker } from 'react-leaflet/Marker'
+import { Popup } from 'react-leaflet/Popup'
 import { TileLayer } from 'react-leaflet/TileLayer'
+import { LayersControl, LayerGroup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import { useMap } from 'react-leaflet/hooks'
 
-import React, { Component } from 'react'
-import Select from 'react-select'
+import React, { Component, useState, useEffect } from 'react';
+// import { Deserializer } from 'jsonapi-serializer';
+import Select from 'react-select';
+import {Formik, Form, Field} from 'formik'
 import useAuth from '../../hooks/useAuth';
-import { element } from 'prop-types';
+import { element, elementType } from 'prop-types';
 
+import L from 'leaflet';
+
+import icon from 'leaflet/dist/images/marker-icon.png';
+
+const markerIcon = new L.Icon({
+  iconUrl: require("../../assets/images/marker.png"),
+  iconSize: [40, 40],
+  iconAnchor: [17, 46], //[left/right, top/bottom]
+  popupAnchor: [0, -46], //[left/right, top/bottom]
+});
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
+
+let count = 0;
 const initialValues = {
     nicknames: '',
 };
 
-const ComparePositions = function ComparePositions() {
+
+const PositionCompare = function PositionCompare() {
     const { currentUser } = useAuth()
-    const [nicknames, setNicknames] = useState([]);
+    const [users, setUsers] = useState([]);
     const [positions, setPositions] = useState([]);
+    const [positions2, setPositions2] = useState({});
+    const [user_positions, setUserPositions] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const nickname_options = [];
+    const map_coor = {};
+    const user_coor = {};
+    const usernames = {};
   
   
     useEffect(() => {
@@ -33,15 +65,18 @@ const ComparePositions = function ComparePositions() {
           }
           return response.json();
         })
-        .then(
-          (data) => new Deserializer({ keyForAttribute: 'camelCase' }).deserialize(
-            data,
-            (_error, nicknamesList) => setNicknames(nicknamesList),
-          ),
-        )
+        .then(setUsers)
+          // (data) => new Deserializer({ keyForAttribute: 'camelCase' }).deserialize(
+          //   data,
+          //   (_error, nicknamesList) => setNicknames(nicknamesList),)
         .catch(() => setError(true))
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);});
+        ;
+
     }, []);
+
+    
   
     if (loading) {
       return (
@@ -52,20 +87,28 @@ const ComparePositions = function ComparePositions() {
         </section>
       );
     }
+
+    users.forEach(user => {
+      let current = { value: user.id, label: user.nickname}
+      nickname_options.push(current);
+      usernames[user.id] = user.nickname;
+    });
+    
   
     return (
-  
       <section id="workouts">
+        
         {error ? (
           <div className="mainsection">
             <h2>Error</h2>
           </div>
         ) : (
           <>
-            <div id="form">
+            <div>
               <br />
             </div>
             <div id="workouts" className="mainsection">
+              
               <Formik
                 initialValues={initialValues}
                 onSubmit={async () => {
@@ -88,21 +131,29 @@ const ComparePositions = function ComparePositions() {
                       }
                       return response.json();
                     })
-                    .then((data) => {
-                      new Deserializer({ keyForAttribute: 'camelCase' })
-                        .deserialize(data, (_error, positionList) => setPositions(positionList));
+                    .then((response) => {setPositions(response);
+                      Object.keys(positions).map((id, position) => {
+                        if (id === String(currentUser.id) ) {
+                          user_coor[id] = positions[id];
+                        }
+                        else if (positions[id].length > 0) {
+                          map_coor[id] = positions[id];
+                        }
+
+                      });
+                      setUserPositions(user_coor);
+                      setPositions2(map_coor);
                     })
                     .catch(() => {
                       setError(true);
                     })
                     .finally(() => {
                       setLoading(false);
-                      setSelectedOptions2([]);
                     });
                 }}
   
               >
-  
+                
                 <Form>
                   <div className="filtro">
                     <div className="barra-filtro">
@@ -115,9 +166,9 @@ const ComparePositions = function ComparePositions() {
                             isMulti
                             placeholder="Seleccione 5 usuarios..."
                             name="nicknames"
-                            options={nicknames}
+                            options={nickname_options}
                             value={selectedOptions}
-                            isOptionDisabled={() => selectedOptions.length >= 5}
+                            //isOptionDisabled={() => selectedOptions.length >= 5}
                             onChange={(options) => {
                               setSelectedOptions(options);
                               form.setFieldValue(field.name, options.value);
@@ -133,19 +184,42 @@ const ComparePositions = function ComparePositions() {
   
               </Formik>
               <div id="workouts" className="container">
-                {positions.map((position) => (
-                    <MapContainer center={position[0].geography } zoom={13} scrollWheelZoom={false}>
+                {Object.keys(positions2).map((id, position) => (
+                  <div id="map">
+                    <p>Comparando con {usernames[id]}</p>
+                    <MapContainer center={positions2[id][0].geography } zoom={13} scrollWheelZoom={true}>
                         <TileLayer 
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' 
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                            {position.forEach( element => {
-                                <Marker position={element.geography}>
+                            <LayersControl position="topright">
+                            <LayersControl.Overlay checked name={usernames[currentUser.id]}>
+                            <LayerGroup>
+                            {user_positions[currentUser.id].map((element,index) => (
+                              <Marker position={[element.geography[0], element.geography[1]]} id="map2" key={count} icon={markerIcon}>
+                                {count += 1}
+                              <Popup>
+                                <p>{element.title}</p>
+                              </Popup>
+                            </Marker> 
+                            ))}
+                            </LayerGroup>
+                        </LayersControl.Overlay>
+                        <LayersControl.Overlay checked name={usernames[id]}>
+                        <LayerGroup>
+                            {positions2[id].map( element => (
+                                <Marker position={[element.geography[0], element.geography[1]]} key={count} id="map" >
+                                {count += 1}
                                 <Popup>
                                   <p>{element.title}</p>
                                 </Popup>
-                              </Marker>
-                            })}
+                              </Marker> 
+                            ))}
+                          </LayerGroup>
+                            </LayersControl.Overlay>
+                        </LayersControl>
+
                     </MapContainer>
+                  </div>
                 ))}
               </div>
             </div>
@@ -157,4 +231,4 @@ const ComparePositions = function ComparePositions() {
     );
   };
 
-  export default ComparePositions;
+  export default PositionCompare;

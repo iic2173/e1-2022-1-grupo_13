@@ -16,7 +16,7 @@ function Navbar() {
                         <Link to='/users'>Usuarios</Link>
                     </li>
                     <li>
-                        <Link to='/positions'>Ubicaciones</Link>
+                        <Link to='/map/compare'>Comparar ubicaciones</Link>
                     </li>
                     <li id="derecha">
             {currentUser ? (

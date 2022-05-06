@@ -18,16 +18,25 @@ const weatherSerializer = new JSONAPISerializer( 'weather', {
 
 const router = new KoaRouter();
 
-router.post('api.weather.position', '/', async(ctx) =>{
+router.get('api.weather.position', '/:lat/:long', async(ctx) =>{
   // console.log(ctx.request.body);
-  const { lat, long } = ctx.request.body;
+  // const { lat, long } = ctx.request.body;
+  const lat = ctx.params.lat
+  const long = ctx.params.long
   // console.log(lat, long);
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey.API_KEY}&units=metric`;
   
-  const req = axios.get(url);
-  const res = await req;
-  console.log(weatherSerializer.serialize(res.data).data.attributes.sys.country);
-  ctx.body = weatherSerializer.serialize(res.data);
+  try {
+    const req = axios.get(url);
+    const res = await req;
+    console.log(weatherSerializer.serialize(res.data).data.attributes.sys.country);
+    ctx.status = 201;
+    ctx.body = weatherSerializer.serialize(res.data);
+    // ctx.body = res.data;
+  } catch (ValidationError) {
+    ctx.throw(400, 'Bad request');
+  }
+  
 });
 
 

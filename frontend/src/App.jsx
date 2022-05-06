@@ -10,8 +10,6 @@ import AuthContextProvider from './contexts/AuthContext';
 import ComparePositions from './views/Map/ComparePositions';
 import UserPositionsList from './views/User/UserPositionsList';
 
-
-
 function App() {
   return (
     <BrowserRouter>

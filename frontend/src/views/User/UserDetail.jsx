@@ -51,6 +51,7 @@ const UserDetail = () => {
         );
       }
     return(
+
         <div>
 
             {error ? (
@@ -75,6 +76,8 @@ const UserDetail = () => {
         </div>)
 
 
+
 };
 
 export default UserDetail;
+

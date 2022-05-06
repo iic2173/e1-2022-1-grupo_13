@@ -5,8 +5,6 @@ import Home from './views/Home';
 import UserList from './views/User/UserList';
 import UserDetail from './views/User/UserDetail';
 
-
-
 function App() {
   return (
     <BrowserRouter>

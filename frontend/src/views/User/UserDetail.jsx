@@ -7,6 +7,7 @@ const UserDetail = () => {
         <section className="container">
             <Link to='/'>Inicio</Link>
             <h2>{`Usuario ${id}`}</h2>
+            <h3>Posiciones del Usuario:</h3>
             <Locations />
 
 
@@ -15,3 +16,4 @@ const UserDetail = () => {
 };
 
 export default UserDetail;
+

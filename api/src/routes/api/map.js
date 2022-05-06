@@ -30,13 +30,9 @@ router.get('api.map.index', '/', async(ctx) => {
     //   },
     // })  
     const positionsList = await ctx.orm.position.findAll()
-    // await ctx.render('map/index', {
-    //   // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-    //   positionsUser: JSON.stringify(positionsListUser, null, 2),
-    //   positionsNotUser: JSON.stringify(positionsList, null, 2)
-    //   }); 
     ctx.body = PositionSerializer.serialize(positionsList)
 });
+
 
 router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
 router.use(setCurrentUser)
@@ -54,6 +50,23 @@ router.post('api.map.create.position', '/new', async(ctx) =>{
         ctx.throw(400, `Ups! \n${error}`);
     }
 });
+
+router.get('api.map.user.positions', '/user', async(ctx) => {
+  const { currentUser } = ctx.state;
+  let responseArr = [];
+  const positionsList = await ctx.orm.position.findAll(
+    { where: { userId: currentUser.id } } );
+  positionsList.forEach( element => {
+    let sendable_obj = {
+      id: element["dataValues"]["id"],
+      "title": element["dataValues"]["title"], 
+      "geography": element["dataValues"]["geography"]["coordinates"],
+    }
+
+    responseArr.push(sendable_obj);
+  });
+  ctx.body = responseArr;
+})
 
 router.post('api.map.create.ping', '/ping', async(ctx) =>{
     const { currentUser } = ctx.state;
@@ -77,13 +90,28 @@ router.post('api.map.compare', '/compare', async(ctx) => {
     const { idsArray } = ctx.request.body;
     idsArray.push(currentUser.id)
 
+    let responseDict = {}
+    idsArray.forEach(element => {
+      responseDict[element] = [];
+    });
+
     const positionsList = await ctx.orm.position.findAll(
       { where: { userId: {
         [Op.or]: idsArray
       }} });
 
+    positionsList.forEach( element => {
+      let current_id = element["dataValues"]["userId"];
+      let sendable_obj = {
+        id: element["dataValues"]["id"],
+        "title": element["dataValues"]["title"], 
+        "geography": element["dataValues"]["geography"]["coordinates"],
+      }
 
-    ctx.body = PositionSerializer.serialize(positionsList);
+      responseDict[current_id].push(sendable_obj);
+    });
+
+    ctx.body = responseDict;
     
 })
 

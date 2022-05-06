@@ -6,6 +6,7 @@ import useAuth from '../../hooks/useAuth';
 import React, { useState, useEffect } from 'react';
 import config from '../../config';
 import { Deserializer } from 'jsonapi-serializer';
+import PositionIndex from '../../components/Positions/PositionIndex';
 
 
 const UserDetail = () => {
@@ -59,7 +60,7 @@ const UserDetail = () => {
                   <section className="container">
                       <Link to='/'>Inicio</Link>
                       <h2>{`Usuario ${user?.nickname}`}</h2>
-                      <Locations />
+                      <PositionIndex />
                       {(id===String(currentUser.id)) ? (
                       <UserPings />) : (
                       <CreatePing user_id={id} />

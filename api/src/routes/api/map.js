@@ -51,11 +51,12 @@ router.post('api.map.create.position', '/new', async(ctx) =>{
     }
 });
 
-router.get('api.map.user.positions', '/user', async(ctx) => {
-  const { currentUser } = ctx.state;
+router.get('api.map.user.positions', '/user/:id', async(ctx) => {
+  // const { currentUser } = ctx.state;
   let responseArr = [];
   const positionsList = await ctx.orm.position.findAll(
-    { where: { userId: currentUser.id } } );
+    // { where: { userId: currentUser.id } } );
+    { where: { userId: ctx.params.id } } );
   positionsList.forEach( element => {
     let sendable_obj = {
       id: element["dataValues"]["id"],

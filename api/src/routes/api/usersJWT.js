@@ -7,6 +7,16 @@ const UserSerializer = new JSONAPISerializer( 'user', {
     keyForAttribute: 'camelCase',
 });
 
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: "hotmail",
+    auth: {
+        user: "grupo13arquisoft@outlook.cl",
+        pass: "g13arquisoft"
+    }
+})
+
 const router = new KoaRouter();
 
 router.post('api.users.create', '/', async(ctx) => {
@@ -16,6 +26,21 @@ router.post('api.users.create', '/', async(ctx) => {
         ctx.status = 201;
         ctx.body = UserSerializer.serialize(user);
         ctx.body = user;
+        console.log("###");
+        console.log(user.email);
+        const options = {
+            from: "grupo13arquisoft@outlook.cl",
+            to: user.email,
+            subject: "Verificacion de cuenta",
+            text: "Verificar cuenta"
+        }
+        transporter.sendMail(options, function (err, info) {
+            if(err){
+                console.log(err);
+                return;
+            }
+            console.log(info.response);
+        });
     } catch (ValidationError) {
         ctx.throw(400, 'Bad Request');
     }

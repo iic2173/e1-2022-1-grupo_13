@@ -1,4 +1,3 @@
-#!/bin/sh
-
-docker-compose build 
-docker-compose up
+#!/bin/bash
+# Run containers
+sudo docker compose up -d

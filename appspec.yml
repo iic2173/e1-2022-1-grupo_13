@@ -25,3 +25,9 @@ os: linux
 files:
   - source: /
     destination: /
+hooks:
+  AfterInstall:
+    - location: docker-compose.yml
+      timeout: 300
+      runas: root
+

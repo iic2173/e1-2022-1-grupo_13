@@ -30,4 +30,3 @@ hooks:
     - location: scripts/after-install.sh
       timeout: 300
       runas: root
-

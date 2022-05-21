@@ -1,2 +1,4 @@
-sudo docker-compose build
-sudo docker-compose up
+#!/bin/sh
+
+docker-compose build 
+docker-compose up

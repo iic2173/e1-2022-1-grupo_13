@@ -29,8 +29,8 @@ hooks:
   BeforeInstall:
     - location: scripts/before-install.sh
       timeout: 300
-      runas: ec2-user
+      runas: ubuntu@ip-172-31-19-50
   AfterInstall:
     - location: scripts/after-install.sh
       timeout: 300
-      runas: ec2-user
+      runas: ubuntu@ip-172-31-19-50

@@ -24,7 +24,7 @@ os: linux
 #   may cause associated deployments to fail.
 files:
   - source: /
-    destination: ~/e1-2022-1-grupo_13
+    destination: /
 hooks:
   BeforeInstall:
     - location: scripts/before-install.sh

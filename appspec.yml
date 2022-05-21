@@ -27,7 +27,7 @@ files:
     destination: /
 hooks:
   AfterInstall:
-    - location: docker-compose.yml
+    - location: scripts/after-install.sh
       timeout: 300
       runas: root
 

@@ -11,4 +11,4 @@ hooks:
   AfterInstall:
     - location: scripts/after-install.sh
       runas: ubuntu
-      timeout: 300
+      timeout: 600

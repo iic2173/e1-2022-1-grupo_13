@@ -27,7 +27,7 @@ files:
     destination: /
 hooks:
   BeforeInstall:
-    - location: before-install.sh
+    - location: scripts/before-install.sh
       timeout: 300
       runas: ubuntu
   AfterInstall:

@@ -2,4 +2,6 @@ api/node_modules
 api/.env
 api/.gitignore
 api/.npmignore
+jwt-rsa-aws-custom-authorizer/.gitignore
+jwt-rsa-aws-custom-authorizer/.env
 .env

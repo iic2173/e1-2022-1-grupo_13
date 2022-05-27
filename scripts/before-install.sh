@@ -1,5 +1,5 @@
 #!/bin/bash
-# cd
+# no cd
 cd /home/ubuntu/e1-2022-1-grupo_13
 sudo docker-compose down -v
 sudo cp -r .env ../

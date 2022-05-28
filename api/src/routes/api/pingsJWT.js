@@ -34,6 +34,34 @@ router.post('api.pings.create', '/send/:id', async(ctx) => {
     }
 });
 
+router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
+    
+    const { ping } = ctx.state;
+    try {
+        // enviar un body con "status: 1 o 2 " 1 es aceptado 2 es rechazado
+        const { response } = ctx.request.body;
+        await ping.update({ status: 1 })
+
+    } catch (validationError) {
+        ctx.throw(400)
+    }
+
+})
+
+router.patch('api.pings.reject', '/:id/reject', async (ctx) => {
+    
+    const { ping } = ctx.state;
+    try {
+        // enviar un body con "status: 1 o 2 " 1 es aceptado 2 es rechazado
+        const { response } = ctx.request.body;
+        await ping.update({ status: 2 })
+
+    } catch (validationError) {
+        ctx.throw(400)
+    }
+
+})
+
 router.get("api.pings.list", "/recieved", async (ctx) => {
     if (!ctx.state.currentUser) {
     ctx.throw(401, 'No iniciaste sesion.');

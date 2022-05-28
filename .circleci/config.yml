@@ -55,8 +55,7 @@ workflows:
       # - node/test
   aws-cli:
     jobs:
-      - aws-cli-cred-setup:
-          context: aws
+      - aws-cli-cred-setup
   deploy-application:
     jobs:
       - aws-code-deploy/deploy:

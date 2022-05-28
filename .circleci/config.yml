@@ -7,7 +7,7 @@ orbs:
   # Orbs reduce the amount of configuration required for common tasks.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@4.7
-  aws-cli: circleci/aws-cli@2.0
+  aws-cli: circleci/aws-cli@3.1.1
   aws-code-deploy: circleci/aws-code-deploy@2.0.0
 
 jobs:
@@ -55,7 +55,8 @@ workflows:
       # - node/test
   aws-cli:
     jobs:
-      - aws-cli-cred-setup
+      - aws-cli-cred-setup:
+          context: aws
   deploy-application:
     jobs:
       - aws-code-deploy/deploy:

@@ -35,7 +35,6 @@ jobs:
             npm install
             yarn install
             yarn global add react-scripts@3.4.1 -g --silent
-  aws-code-deploy/deploy:
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.

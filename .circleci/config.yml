@@ -7,6 +7,7 @@ orbs:
   # Orbs reduce the amount of configuration required for common tasks.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@4.7
+  aws-cli: circleci/aws-cli@2.0.6
   aws-code-deploy: circleci/aws-code-deploy@2.0.0
 
 jobs:
@@ -35,6 +36,13 @@ jobs:
             npm install
             yarn install
             yarn global add react-scripts@3.4.1 -g --silent
+  aws-cli-cred-setup:
+    executor: aws-cli/default
+    steps:
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY
+          aws-secret-access-key: AWS_ACCESS_SECRET
+          aws-region: AWS_REGION_NAME
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
@@ -45,6 +53,10 @@ workflows:
       - build-and-test
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
+  aws-cli:
+    jobs:
+      - aws-cli-cred-setup:
+          context: aws
   deploy-application:
     jobs:
       - aws-code-deploy/deploy:

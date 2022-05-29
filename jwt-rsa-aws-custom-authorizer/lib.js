@@ -45,21 +45,32 @@ module.exports.authenticate = (params) => {
     const token = getToken(params);
 
     const decoded = jwt.decode(token, { complete: true });
-    if (!decoded || !decoded.header || !decoded.header.kid) {
+    console.log(decoded);
+    if (!decoded || !decoded.header) { //|| !decoded.header.kid) {
         throw new Error('invalid token');
     }
 
-    const getSigningKey = util.promisify(client.getSigningKey);
-    return getSigningKey(decoded.header.kid)
-        .then((key) => {
-            const signingKey = key.publicKey || key.rsaPublicKey;
-            return jwt.verify(token, signingKey, jwtOptions);
-        })
-        .then((decoded)=> ({
+    const verifyToken = jwt.verify(token, process.env.SECRET, jwtOptions);
+    if (verifyToken) {
+        return ({
             principalId: decoded.sub,
             policyDocument: getPolicyDocument('Allow', params.methodArn),
             context: { scope: decoded.scope }
-        }));
+        })
+    }
+    // const getSigningKey = util.promisify(client.getSigningKey);
+    // console.log(getSigningKey);
+    // return 'Allow';
+    // return getSigningKey(decoded.header.kid)
+    //     .then((key) => {
+    //         const signingKey = key.publicKey || key.rsaPublicKey;
+    //         return jwt.verify(token, signingKey, jwtOptions);
+    //     })
+    //     .then((decoded)=> ({
+    //         principalId: decoded.sub,
+    //         policyDocument: getPolicyDocument('Allow', params.methodArn),
+    //         context: { scope: decoded.scope }
+    //     }));
 }
 
  const client = jwksClient({

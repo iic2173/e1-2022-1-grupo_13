@@ -1,5 +1,6 @@
 const KoaRouter = require('koa-router');
 const { setCurrentUser, decodeJWT } = require('../../middlewares/auth');
+const { default: axios } = require('axios');
 // const jwt = require('koa-jwt');
 
 const router = new KoaRouter();
@@ -39,13 +40,61 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
     
     const ping = await ctx.orm.ping.findByPk(ctx.params.id);
 
+    const user1 = await ctx.orm.user.findByPk(ping.userId)
+    const user2 = await ctx.orm.user.findByPk(ping.reciverId)
+
+
+    const positions_u1 = await ctx.orm.position.findAll(
+        { where: { userId: ping.userId} } );
+    const positions_u2 = await ctx.orm.position.findAll(
+        { where: { userId: ping.reciverId} } );
+
+    let tags_array_1 = []
+    let tags_array_2 = []
+    let positions_array_1 = []
+    let positions_array_2 = []
+
+    for (const element of positions_u1) {
+        let sendable_obj = {
+            "lat_long": element["dataValues"]["geography"]["coordinates"]
+        }
+        positions_array_1.push(sendable_obj);
+        console.log('POS:')
+        console.log(element)
+        const tag = await element.getTags()
+        tags_array_1.push(tag[0]["category"])
+    }
+    for (const element of positions_u2) {
+        let sendable_obj = {
+            "lat_long": element["dataValues"]["geography"]["coordinates"]
+        }
+        positions_array_2.push(sendable_obj);
+        const tag = await element.getTags()
+        tags_array_2.push(tag[0]["category"])
+    }
+
     try {
         // enviar un body con "status: 1 o 2 " 1 es aceptado 2 es rechazado
         await ping.update({ status: 1 })
         ctx.body = ping;
-        // enviar request con los workers
-        // hay que poner el codigo aca :D
+
+        const body = { 
+            "ids": {'user_1': user1.id, 'user_2': user2.id, 'pingId': ping.id },
+            "sidi": {"positions_1": positions_array_1, "positions_2": positions_array_2},
+            "siin" : {"tags_1":tags_array_1, "tags_2": tags_array_2}
+            };
+
+        const url = 'http://localhost:8010/api/polls';
+        const req = axios.post(url, body);
+        const response = await req;
+        const ping =  ctx.orm.ping.findByPk(response.data['pingId']);
+        const sidi = response.data['sidi'];
+        const siin = response.data['siin'];
+        const dindin = response.data['dindin'];
+        ping.update({ sidi: sidi, siin: siin, dindin: dindin })
+
     } catch (validationError) {
+        console.log(validationError)
         ctx.throw(400)
     }
 })
@@ -92,21 +141,6 @@ router.get("api.pings.sent", "/sent", async (ctx) => {
     ctx.body = ping;
 });
 
-router.patch('api.pings.update.indexes', async (ctx) => {
-    const indexes = ctx.request.body
-    const ping = await ctx.orm.ping.findByPk(indexes['pingId']);
-    const sidi = indexes['sidi'];
-    const siin = indexes['siin'];
-    const dindin = indexes['dindin'];
-
-    try {
-        await ping.update({ sidi: sidi, siin: siin, dindin: dindin })
-        ctx.body = ping;
-    } catch (validationError) {
-        ctx.throw(400)
-    }
-
-})
 
 
 module.exports = router;

@@ -16,7 +16,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   ping.init({
     userId: DataTypes.INTEGER,
-    reciverId: DataTypes.INTEGER
+    reciverId: DataTypes.INTEGER,
+    status: DataTypes.INTEGER,
+    sidi: DataTypes.INTEGER,
+    siin: DataTypes.INTEGER,
+    dindin: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'ping',

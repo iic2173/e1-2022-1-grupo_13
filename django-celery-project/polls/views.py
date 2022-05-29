@@ -12,13 +12,13 @@ from polls.tasks import handle_request
 # Create your views here.
 
 
-@api_view(['GET', 'PATCH', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE'])
 def polls_list(request):
     if request.method == 'GET':
         return JsonResponse({"message": "hola"}, status=status.HTTP_200_OK)
         # 'safe=False' for objects serialization
 
-    elif request.method == 'PATCH':
+    elif request.method == 'POST':
         data = JSONParser().parse(request)
         sendable_response = handle_request.delay(data).wait()
         return JsonResponse(sendable_response, status=status.HTTP_200_OK)

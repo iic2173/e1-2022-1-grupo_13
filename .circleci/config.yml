@@ -62,7 +62,7 @@ workflows:
       - aws-code-deploy/deploy:
           application-name: CodeDeployGitHubDemo-App
           bundle-bucket: codepipeline-us-east-1-934325042191
-          bundle-key: 3efc74e0-e122-48c7-b2a0-a4ec5ae5671e
+          bundle-key: 3efc74e0-e122-48c7-b2a0-a4ec5ae5671e 
           deployment-group: CodeDeployGitHubDemo-DepGrp
           service-role-arn: arn:aws:iam::421689746159:role/CodeDeployServiceRole
 

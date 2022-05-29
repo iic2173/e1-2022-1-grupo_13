@@ -36,11 +36,14 @@ router.post('api.pings.create', '/send/:id', async(ctx) => {
 
 router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
     
-    const { ping } = ctx.state;
+    const ping = await ctx.orm.ping.findByPk(ctx.params.id);
+
     try {
         // enviar un body con "status: 1 o 2 " 1 es aceptado 2 es rechazado
         await ping.update({ status: 1 })
         ctx.body = ping;
+        // enviar request con los workers
+        // hay que poner el codigo aca :D
     } catch (validationError) {
         ctx.throw(400)
     }
@@ -48,7 +51,8 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
 
 router.patch('api.pings.reject', '/:id/reject', async (ctx) => {
     
-    const { ping } = ctx.state;
+    const ping = await ctx.orm.ping.findByPk(ctx.params.id);
+
     try {
         await ping.update({ status: 2 })
         ctx.body = ping;
@@ -85,6 +89,23 @@ router.get("api.pings.sent", "/sent", async (ctx) => {
     });
     // console.log(ping)
     ctx.body = ping;
+});
+
+router.patch('api.pings.update.indexes', async (ctx) => {
+    const indexes = ctx.request.body
+    const ping = await ctx.orm.ping.findByPk(indexes['pingId']);
+    const sidi = indexes['sidi'];
+    const siin = indexes['siin'];
+    const dindin = indexes['dindin'];
+
+    try {
+        await ping.update({ sidi: sidi, siin: siin, dindin: dindin })
+        ctx.body = ping;
+    } catch (validationError) {
+        ctx.throw(400)
+    }
+
 })
+
 
 module.exports = router;

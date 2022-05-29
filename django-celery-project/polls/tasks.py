@@ -1,4 +1,3 @@
-from this import d
 from celery import shared_task
 import math
 from collections import Counter

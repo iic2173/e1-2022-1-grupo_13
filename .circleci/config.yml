@@ -39,6 +39,8 @@ jobs:
   aws-cli-cred-setup:
     executor: aws-cli/default
     steps:
+      - run:  
+          command: echo $AWS_ACCES_KEY_ID
       - aws-cli/setup:
           aws-access-key-id: $AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_ACCESS_SECRET

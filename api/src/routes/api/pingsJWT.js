@@ -1,10 +1,11 @@
 const KoaRouter = require('koa-router');
-const { setCurrentUser } = require('../../middlewares/auth');
-const jwt = require('koa-jwt');
+const { setCurrentUser, decodeJWT } = require('../../middlewares/auth');
+// const jwt = require('koa-jwt');
 
 const router = new KoaRouter();
 
-router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
+router.use(decodeJWT);
+// router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
 router.use(setCurrentUser)
 
 router.post('api.pings.create', '/send/:id', async(ctx) => {

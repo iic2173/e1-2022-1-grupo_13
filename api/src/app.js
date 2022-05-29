@@ -18,11 +18,12 @@ const orm = require('./models');
 // App constructor
 const app = new Koa();
 
-app.use(cors({ origin: process.env.ORIGIN || 'http://localhost:8080' }));
+app.use(cors());
 
 app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*');
-  ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  // ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  ctx.set('Access-Control-Allow-Headers', '*');
   ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
   await next();
 });

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const KoaRouter = require('koa-router');
-const jwt = require('koa-jwt');
-const { setCurrentUser } = require('../../middlewares/auth');
+// const jwt = require('koa-jwt');
+const { setCurrentUser, decodeJWT } = require('../../middlewares/auth');
 const { Sequelize, Op } = require("sequelize");
 
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
@@ -34,7 +34,8 @@ router.get('api.map.index', '/', async(ctx) => {
 });
 
 
-router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
+// router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
+router.use(decodeJWT)
 router.use(setCurrentUser)
 
 router.post('api.map.create.position', '/new', async(ctx) =>{

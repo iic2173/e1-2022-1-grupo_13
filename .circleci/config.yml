@@ -60,7 +60,7 @@ workflows:
   deploy-application:
     jobs:
       - aws-code-deploy/deploy:
-          application-name: iic2173/e1-2022-1-grupo_13 
+          application-name: CodeDeployGitHubDemo-App
           bundle-bucket: codepipeline-us-east-1-934325042191
           bundle-key: 3efc74e0-e122-48c7-b2a0-a4ec5ae5671e
           deployment-group: CodeDeployGitHubDemo-DepGrp

@@ -39,10 +39,8 @@ jobs:
   aws-cli-cred-setup:
     executor: aws-cli/default
     steps:
-      - run:  
-          command: echo "OLI"
       - aws-cli/setup:
-          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_ACCESS_SECRET
           aws-region: AWS_REGION_NAME
 workflows:

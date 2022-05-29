@@ -1,0 +1,5 @@
+{
+    "type" : "TOKEN",
+    "authorizationToken" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJndHkiOiJjbGllbnRfY3JlZGVudGlhbHMiLCJjbGllbnRfaWQiOiJweGY0NnFoV2xlbll0ejhXZDhSZGx1ZnI2cm5Yd3lhZSIsImNsaWVudF9zZWNyZXQiOiJlV2hDTGVzRkpFbE5YaEsyTDgzcmFOU25Wb3V6N3ZQMjFNYWxYUjBVdmc5Q2VuTGhQaVp3U05KQUZQbDFRUE9PIiwiYXVkIjoiaHR0cHM6Ly9lMi1hcnF1aXNvZnQyLmNvbSIsImlzcyI6Imh0dHBzOi8vZGV2LXByeG5kaW9pLnVzLmF1dGgwLmNvbS8iLCJzdWIiOjUsImlhdCI6MTY1Mzc5MjgzNCwiZXhwIjoxNjUzNzk2NDM0fQ.O6S6-qtj1qoISTBi2SPmGQee7dNNxiFLGGl4IsVmFSg",
+    "methodArn":"arn:aws:execute-api:us-east-1:421689746159:2zvz0rm0pj/*/GET/api/users"
+}

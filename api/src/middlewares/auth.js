@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 function checkAuth(ctx, next) {
   const { currentUser } = ctx.state;
   if (!currentUser) ctx.throw(401);
@@ -11,6 +13,20 @@ function checkAuth(ctx, next) {
 //   return next();
 // }
 
+function decodeJWT (ctx, next) {
+  const token_complete = ctx.get('Authorization');
+  // console.log("---------------------------------------------")
+  // console.log(token_complete);
+  const token_list = token_complete.split(' ');
+  // console.log(token_list[1]);
+  var decoded = jwt.decode(token_list[1], {complete: true});
+  // console.log(decoded.header);
+  // console.log(decoded.payload)
+  // console.log("---------------------------------------------")
+  ctx.state = decoded.payload;
+  return next();
+};
+
 async function setCurrentUser(ctx, next) {
   const { authData } = ctx.state;
   if (authData) {
@@ -22,5 +38,5 @@ async function setCurrentUser(ctx, next) {
 module.exports = {
   checkAuth,
   setCurrentUser,
-  // apiSetCurrentUser
+  decodeJWT
 };

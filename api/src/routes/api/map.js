@@ -40,10 +40,15 @@ router.use(setCurrentUser)
 
 router.post('api.map.create.position', '/new', async(ctx) =>{
     const { currentUser } = ctx.state;
-    const { title, lat, long } = ctx.request.body;
+    const { title, lat, long, tags } = ctx.request.body;
+    
+    const tag = await ctx.orm.tag.findByPk(tags['value']);
     const geography = {"type":"Point","coordinates":[lat,long], crs: { type: 'name', properties: { name: 'EPSG:4326'} }};
     const position = ctx.orm.position.build({ userId: currentUser.id, title, geography});
+
     try {
+        await position.save();
+        await position.addTag(tag);
         await position.save();
         ctx.body = PositionSerializer.serialize(position);
         ctx.status;
@@ -58,21 +63,21 @@ router.get('api.map.user.positions', '/user/:id', async(ctx) => {
   const positionsList = await ctx.orm.position.findAll(
     // { where: { userId: currentUser.id } } );
     { where: { userId: ctx.params.id } } );
-  positionsList.forEach( element => {
+  for (const element of positionsList){
+    const tags = await element.getTags()
     let sendable_obj = {
-      id: element["dataValues"]["id"],
+      'id': element["dataValues"]["id"],
       "title": element["dataValues"]["title"], 
       "geography": element["dataValues"]["geography"]["coordinates"],
+      "tag": tags[0]
     }
-
     responseArr.push(sendable_obj);
-  });
+  };
   ctx.body = responseArr;
 })
 
 router.post('api.map.create.ping', '/ping', async(ctx) =>{
     const { currentUser } = ctx.state;
-    const { friendId } = ctx.request.body;
     const friend = await ctx.orm.user.findOne({
         where: {
           id: friendId

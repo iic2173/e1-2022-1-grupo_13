@@ -8,6 +8,7 @@ const UserSerializer = new JSONAPISerializer( 'user', {
 });
 
 const nodemailer = require('nodemailer');
+const { setCurrentUser } = require('../../middlewares/auth');
 
 const transporter = nodemailer.createTransport({
     service: "hotmail",
@@ -53,6 +54,7 @@ router.get("api.users.list", "/", async (ctx) => {
 
 })
 
+
 router.get('api.users.show', '/:id', async(ctx) =>{
     const user = await ctx.orm.user.findByPk(ctx.params.id);
     if (!user) {
@@ -60,5 +62,51 @@ router.get('api.users.show', '/:id', async(ctx) =>{
     }
     ctx.body = UserSerializer.serialize(user);
 });
+
+router.get('api.users.indexes', '/indexes/:id', async (ctx) => {
+    const { currentUser } = ctx.state;
+    const user2 = await ctx.orm.user.findByPk(ctx.params.id);
+
+    let tags_array_1 = []
+    let tags_array_2 = []
+    let positions_array_1 = []
+    let positions_array_2 = []
+
+    const positions_u1 = await currentUser.getPositions()
+    const positions_u2 = await user2.getPositions()
+
+    positions_u1.forEach( element => {
+        let sendable_obj = {
+          "lat_long": element["dataValues"]["geography"]["coordinates"]
+        }
+    
+        positions_array_1.push(sendable_obj);
+      });
+
+    positions_u2.forEach( element => {
+        let sendable_obj = {
+          "lat_long": element["dataValues"]["geography"]["coordinates"]
+        }
+    
+        positions_array_2.push(sendable_obj);
+      });
+
+    positions_u1.forEach((position) => {
+        tag = position.getTag()
+        tags_array_1.push(tag.category)
+        
+    })
+    positions_u2.forEach((position) => {
+        tag = position.getTag()
+        tags_array_2.push(tag.category)
+    })
+
+    ctx.body = { 
+        "ids": {'user_1': currentUser.id, 'user_2': user2.id, 'pingId': ping.id },
+        "sidi": {"positions_1": positions_array_1, "positions_2": positions_array_2},
+        "siin" : {"tags_1":tags_array_1, "tags_2": tags_array_2}
+        };
+
+})
 
 module.exports = router;

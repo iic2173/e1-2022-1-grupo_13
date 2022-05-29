@@ -59,8 +59,6 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
             "lat_long": element["dataValues"]["geography"]["coordinates"]
         }
         positions_array_1.push(sendable_obj);
-        console.log('POS:')
-        console.log(element)
         const tag = await element.getTags()
         tags_array_1.push(tag[0]["category"])
     }
@@ -75,8 +73,6 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
 
     try {
         // enviar un body con "status: 1 o 2 " 1 es aceptado 2 es rechazado
-        await ping.update({ status: 1 })
-        ctx.body = ping;
 
         const body = { 
             "ids": {'user_1': user1.id, 'user_2': user2.id, 'pingId': ping.id },
@@ -87,11 +83,20 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
         const url = 'http://localhost:8010/api/polls';
         const req = axios.post(url, body);
         const response = await req;
+        console.log('###########')
+        console.log('###########')
+        console.log('###########')
+        console.log('###########')
+        console.log(response)
+        console.log('###########')
+        console.log('###########')
+        console.log('###########')
         const ping =  ctx.orm.ping.findByPk(response.data['pingId']);
         const sidi = response.data['sidi'];
         const siin = response.data['siin'];
         const dindin = response.data['dindin'];
-        ping.update({ sidi: sidi, siin: siin, dindin: dindin })
+
+        await ping.update({ status:1, sidi: sidi, siin: siin, dindin: dindin })
 
     } catch (validationError) {
         console.log(validationError)

@@ -63,6 +63,7 @@ services:
       - .:/app
     ports:
       - 8010:8010
+      - 587:587
     # env_file is used to manage the env variables of our project
     env_file:
       - ./django-celery-project/.env

@@ -75,6 +75,7 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
         // enviar un body con "status: 1 o 2 " 1 es aceptado 2 es rechazado
 
         const body = { 
+            "emails": {'email_1': user1.email, 'email_2': user2.email},
             "ids": {'user_1': user1.id, 'user_2': user2.id, 'pingId': ping.id },
             "sidi": {"positions_1": positions_array_1, "positions_2": positions_array_2},
             "siin" : {"tags_1":tags_array_1, "tags_2": tags_array_2}

@@ -1,6 +1,6 @@
 const KoaRouter = require('koa-router');
 const { setCurrentUser, decodeJWT } = require('../../middlewares/auth');
-const { default: axios } = require('axios');
+const axios = require('axios');
 // const jwt = require('koa-jwt');
 
 const router = new KoaRouter();
@@ -79,28 +79,35 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
             "sidi": {"positions_1": positions_array_1, "positions_2": positions_array_2},
             "siin" : {"tags_1":tags_array_1, "tags_2": tags_array_2}
             };
+                        
+        
+        const url = 'http://web:8010/api/polls'
+        const req = axios.post(url, body, {headers: {
+            'Accept': 'application/json',
+            'Content-Type': "application/json"
+        }
+        });
 
-        const url = 'http://localhost:8010/api/polls';
-        const req = axios.post(url, body);
         const response = await req;
-        console.log('###########')
-        console.log('###########')
-        console.log('###########')
-        console.log('###########')
-        console.log(response)
-        console.log('###########')
-        console.log('###########')
-        console.log('###########')
-        const ping =  ctx.orm.ping.findByPk(response.data['pingId']);
         const sidi = response.data['sidi'];
         const siin = response.data['siin'];
         const dindin = response.data['dindin'];
 
-        await ping.update({ status:1, sidi: sidi, siin: siin, dindin: dindin })
+        await ping.update({ status: 1, sidi: sidi, siin: siin, dindin: dindin })
+        ctx.body = ping;
 
-    } catch (validationError) {
-        console.log(validationError)
-        ctx.throw(400)
+    } catch (ex) {
+        if (ex && ex !== undefined && ex.toString && ex.toString !== undefined) {
+            console.log(ex.toString());
+        }
+        if (
+            ex.response &&
+            ex.response !== undefined &&
+            ex.response.data &&
+            ex.response.data !== undefined
+        ) {
+            console.log(ex)
+        }
     }
 })
 

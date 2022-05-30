@@ -6,10 +6,7 @@ FROM node:12.22.11-alpine
 
 WORKDIR /api
 
-
 COPY package*.json ./
-
-RUN apk --no-cache add curl
 RUN npm install
 # RUN npm install yarn
 # RUN yarn sequelize db:migrate

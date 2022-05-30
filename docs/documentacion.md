@@ -15,33 +15,6 @@ Finalmente, en la sección de workflow se indica que es lo que se debe probar, e
 
 
 1. Es necesario tener docker corriendo
-2. Crear un .env dentro de la carpeta `django-celery-project` (valores de ejemplo más abajo)
-3. Luego, hay que hacer git clone del back-end y git clone del front-end, ambos en repositorios distintos.
-4. Hacer docker-compose build y docker-compose up en ambos
-5. Probar localhost:80/api para las requests hacia el backend y localhost:8080 para probar las funcionalidades implementadas en el frontend
-
-# django-celery-project/.env
-
-```
-DEBUG=1
-SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
-DJANGO_ALLOWED_HOSTS=*
-
-SQL_ENGINE=django.db.backends.postgresql
-SQL_DATABASE=db_workers
-SQL_USER=hello_django
-SQL_PASSWORD=hello_django
-SQL_HOST=db_workers
-SQL_PORT=5432
-
-CELERY_BROKER=redis://redis:6379/0
-CELERY_BACKEND=redis://redis:6379/0 
-```
-
-# .env (en root)
-```
-DB_NAME=db-api
-DB_USERNAME=root
-DB_PASSWORD=root
-JWT_SECRET='hGTKnBhynVPxo2jGOQwHuAX2x2ZX5X5U'
-```
+2. Luego, hay que hacer git clone del back-end y git clone del front-end, ambos en repositorios distintos.
+3. Hacer docker-compose build y docker-compose up en ambos
+4. Probar localhost:80/api para las requests hacia el backend y localhost:8080 para probar las funcionalidades implementadas en el frontend

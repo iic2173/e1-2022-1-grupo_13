@@ -18,9 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     reciverId: DataTypes.INTEGER,
     status: DataTypes.INTEGER,
-    sidi: DataTypes.DOUBLE,
-    siin: DataTypes.DOUBLE,
-    dindin: DataTypes.DOUBLE
+    sidi: DataTypes.INTEGER,
+    siin: DataTypes.INTEGER,
+    dindin: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'ping',

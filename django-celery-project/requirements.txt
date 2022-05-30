@@ -1,0 +1,7 @@
+celery==5.2.1
+django==3.2.9
+flower==1.0.0
+psycopg2-binary==2.9.2              # new
+redis==4.0.2
+djangorestframework==3.11.2
+django-cors-headers

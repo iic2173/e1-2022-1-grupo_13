@@ -1,6 +1,6 @@
 const KoaRouter = require('koa-router');
 const { setCurrentUser, decodeJWT } = require('../../middlewares/auth');
-const { default: axios } = require('axios');
+const axios = require('axios');
 // const jwt = require('koa-jwt');
 
 const router = new KoaRouter();
@@ -59,8 +59,6 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
             "lat_long": element["dataValues"]["geography"]["coordinates"]
         }
         positions_array_1.push(sendable_obj);
-        console.log('POS:')
-        console.log(element)
         const tag = await element.getTags()
         tags_array_1.push(tag[0]["category"])
     }
@@ -75,27 +73,41 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
 
     try {
         // enviar un body con "status: 1 o 2 " 1 es aceptado 2 es rechazado
-        await ping.update({ status: 1 })
-        ctx.body = ping;
 
         const body = { 
             "ids": {'user_1': user1.id, 'user_2': user2.id, 'pingId': ping.id },
             "sidi": {"positions_1": positions_array_1, "positions_2": positions_array_2},
             "siin" : {"tags_1":tags_array_1, "tags_2": tags_array_2}
             };
+                        
+        
+        const url = 'http://web:8010/api/polls'
+        const req = axios.post(url, body, {headers: {
+            'Accept': 'application/json',
+            'Content-Type': "application/json"
+        }
+        });
 
-        const url = 'http://localhost:8010/api/polls';
-        const req = axios.post(url, body);
         const response = await req;
-        const ping =  ctx.orm.ping.findByPk(response.data['pingId']);
         const sidi = response.data['sidi'];
         const siin = response.data['siin'];
         const dindin = response.data['dindin'];
-        ping.update({ sidi: sidi, siin: siin, dindin: dindin })
 
-    } catch (validationError) {
-        console.log(validationError)
-        ctx.throw(400)
+        await ping.update({ status: 1, sidi: sidi, siin: siin, dindin: dindin })
+        ctx.body = ping;
+
+    } catch (ex) {
+        if (ex && ex !== undefined && ex.toString && ex.toString !== undefined) {
+            console.log(ex.toString());
+        }
+        if (
+            ex.response &&
+            ex.response !== undefined &&
+            ex.response.data &&
+            ex.response.data !== undefined
+        ) {
+            console.log(ex)
+        }
     }
 })
 

@@ -62,7 +62,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8010:8000
+      - 8010:8010
     # env_file is used to manage the env variables of our project
     env_file:
       - ./django-celery-project/.env
@@ -70,7 +70,8 @@ services:
       - redis
       - db_workers
     networks:
-      - worker-network
+      - app-network
+
   db_workers:
     image: postgres:14-alpine
     volumes:
@@ -82,11 +83,13 @@ services:
     ports: 
       - "5433:5432"
     networks:
-      - worker-network
+      - app-network
+
   redis:
     image: redis:6-alpine
     networks:
-      - worker-network
+      - app-network
+
 
   celery_worker:
     build:
@@ -102,9 +105,11 @@ services:
       - redis
       - db_workers
     networks:
-      - worker-network
+      - app-network
+
 
   celery_beat:
+    container_name: 'celery_beat'
     build:
       context: ./django-celery-project
       dockerfile: ./compose/local/django/Dockerfile
@@ -118,9 +123,11 @@ services:
       - redis
       - db_workers
     networks:
-      - worker-network
+      - app-network
+
 
   flower:
+    container_name: 'flower'
     build:
       context: ./django-celery-project
       dockerfile: ./compose/local/django/Dockerfile
@@ -136,13 +143,13 @@ services:
       - redis
       - db_workers
     networks:
-      - worker-network
+      - app-network
+
 
 networks:
   app-network:
     driver: bridge
-  worker-network:
-    driver: bridge
+
 volumes:
   postgres_data:
   postgres_data_workers:

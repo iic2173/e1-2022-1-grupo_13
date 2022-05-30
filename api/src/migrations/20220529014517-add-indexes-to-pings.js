@@ -3,15 +3,15 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('pings', 'sidi', {
-      type: Sequelize.INTEGER,
+      type: Sequelize.DOUBLE,
       defaultValue: 0
     });
     await queryInterface.addColumn('pings', 'siin', {
-      type: Sequelize.INTEGER,
+      type: Sequelize.DOUBLE,
       defaultValue: 0
     });
     await queryInterface.addColumn('pings', 'dindin', {
-      type: Sequelize.INTEGER,
+      type: Sequelize.DOUBLE,
       defaultValue: 0
     });
   },

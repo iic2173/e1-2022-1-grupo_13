@@ -1,0 +1,26 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  continuous-deployment:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v2
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+    - run: |
+        commit_hash=`git rev-parse HEAD`
+        aws deploy create-deployment \
+          --application-name E3Software \
+          --deployment-group-name e3-deploy \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --github-location repository=${{ github.repository }},commitId=$commit_hash

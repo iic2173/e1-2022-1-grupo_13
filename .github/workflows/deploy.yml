@@ -20,7 +20,7 @@ jobs:
     - run: |
         commit_hash=`git rev-parse HEAD`
         aws deploy create-deployment \
-          --application-name E3Software \
+          --application-name 	E3Arquisis \
           --deployment-group-name e3-deploy \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --github-location repository=${{ github.repository }},commitId=$commit_hash

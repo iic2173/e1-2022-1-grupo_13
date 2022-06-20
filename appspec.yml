@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: .
     destination: /home/ubuntu/e1-2022-1-grupo_13
 hooks:
   AfterInstall:

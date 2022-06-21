@@ -1,9 +1,9 @@
 require('dotenv').config();
 const KoaRouter = require('koa-router');
 // const jwt = require('koa-jwt');
-const { setCurrentUser, decodeJWT } = require('../../middlewares/auth');
+const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');
 const { Sequelize, Op } = require("sequelize");
-
+const axios = require('axios');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
 
 const PositionSerializer = new JSONAPISerializer( 'position', {
@@ -35,6 +35,7 @@ router.get('api.map.index', '/', async(ctx) => {
 
 
 // router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
+router.use(jwtCheck);
 router.use(decodeJWT)
 router.use(setCurrentUser)
 
@@ -78,12 +79,37 @@ router.get('api.map.user.positions', '/user/:id', async(ctx) => {
 
 router.post('api.map.create.ping', '/ping', async(ctx) =>{
     const { currentUser } = ctx.state;
-    const friend = await ctx.orm.user.findOne({
-        where: {
-          id: friendId
-        }
-      });
-    const ping = ctx.orm.ping.build({ userId: currentUser.id, reciverId: friend.id});
+    // const friend = await ctx.orm.user.findOne({
+    //     where: {
+    //       id: friendId
+    //     }
+    //   });
+    const { friendId } = ctx.request.body;
+    const apiJWT = await getManagementApiJWT();
+    const options = { 
+        // method: "GET",
+        // url: "https://dev-prxndioi.us.auth0.com/api/v2/users",
+        params: {q: `user_id:"${friendId}"`, search_engine: 'v3'},
+        headers: { 
+            'Authorization' : `Bearer ${apiJWT.access_token}`,
+            'Content-Type': 'application/json'
+        },
+        };
+    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const req = axios.get(url, options);
+    const res = await req;
+        // console.log(res.data);
+        // console.log(apiSerializer.serialize(res.data).data);
+        // ctx.status = 201;
+        // ctx.body = apiSerializer.serialize(res.data);
+    if (res.data.length == 0) {
+        console.log('IN')
+        ctx.throw(404, 'El usuario que trata de contactar no existe');
+    }
+    const friend = res.data;
+    console.log(currentUser);
+    console.log(friend);
+    const ping = ctx.orm.ping.build({ userId: currentUser.sub, reciverId: friend.user_id});
       try {
         await ping.save();
         ctx.body = 'Ping enviado con exito';
@@ -95,7 +121,7 @@ router.post('api.map.create.ping', '/ping', async(ctx) =>{
 router.post('api.map.compare', '/compare', async(ctx) => {
     const { currentUser } = ctx.state;
     const { idsArray } = ctx.request.body;
-    idsArray.push(currentUser.id)
+    idsArray.push(currentUser.sub)
 
     let responseDict = {}
     idsArray.forEach(element => {

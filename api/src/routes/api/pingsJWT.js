@@ -1,9 +1,11 @@
 const KoaRouter = require('koa-router');
-const { setCurrentUser, decodeJWT } = require('../../middlewares/auth');
+const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');
 const axios = require('axios');
 // const jwt = require('koa-jwt');
 
 const router = new KoaRouter();
+
+router.use(jwtCheck);
 
 router.use(decodeJWT);
 // router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
@@ -14,19 +16,40 @@ router.post('api.pings.create', '/send/:id', async(ctx) => {
         ctx.throw(401, 'No tienes permiso para crear solicitudes');
     }
 
-    const reciver = await ctx.orm.user.findByPk(ctx.params.id);
-    if (!reciver) {
+    // const reciver = await ctx.orm.user.findByPk(ctx.params.id);
+    // if (!reciver) {
+    //     ctx.throw(404, 'El usuario que trata de contactar no existe');
+    // }
+    const apiJWT = await getManagementApiJWT();
+    const options = { 
+        // method: "GET",
+        // url: "https://dev-prxndioi.us.auth0.com/api/v2/users",
+        params: {q: `user_id:"${ctx.params.id}"`, search_engine: 'v3'},
+        headers: { 
+            'Authorization' : `Bearer ${apiJWT.access_token}`,
+            'Content-Type': 'application/json'
+        },
+        };
+    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const req = axios.get(url, options);
+    const res = await req;
+        // console.log(res.data);
+        // console.log(apiSerializer.serialize(res.data).data);
+        // ctx.status = 201;
+        // ctx.body = apiSerializer.serialize(res.data);
+    if (res.data.length == 0) {
+        console.log('IN')
         ctx.throw(404, 'El usuario que trata de contactar no existe');
     }
 
-    if (ctx.params.id == ctx.state.currentUser.id) {
+    if (ctx.params.id == ctx.state.currentUser.sub) {
         ctx.throw(404, 'Se esta tratando de comunicar consigo mismo');
     }
 
     try {
         const ping = ctx.orm.ping.build(ctx.request.body);
-        ping.reciverId = parseInt(ctx.params.id, 10);
-        ping.userId = ctx.state.currentUser.id;
+        ping.reciverId = ctx.params.id //parseInt(ctx.params.id, 10);
+        ping.userId = ctx.state.currentUser.sub;
         await ping.save({ field: [ 'reciverId', 'userId' ]});
         ctx.status = 201;
         ctx.body = ping;
@@ -40,8 +63,36 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
     
     const ping = await ctx.orm.ping.findByPk(ctx.params.id);
 
-    const user1 = await ctx.orm.user.findByPk(ping.userId)
-    const user2 = await ctx.orm.user.findByPk(ping.reciverId)
+    const apiJWT = await getManagementApiJWT();
+    const options1 = { 
+        // method: "GET",
+        // url: "https://dev-prxndioi.us.auth0.com/api/v2/users",
+        params: {q: `user_id:"${ping.userId}"`, search_engine: 'v3'},
+        headers: { 
+            'Authorization' : `Bearer ${apiJWT.access_token}`,
+            'Content-Type': 'application/json'
+        },
+    };
+    const options2 = { 
+        // method: "GET",
+        // url: "https://dev-prxndioi.us.auth0.com/api/v2/users",
+        params: {q: `user_id:"${ping.reciverId}"`, search_engine: 'v3'},
+        headers: { 
+            'Authorization' : `Bearer ${apiJWT.access_token}`,
+            'Content-Type': 'application/json'
+        },
+    };
+    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const req1 = axios.get(url, options1);
+    const res1 = await req1;
+    const user1 = res1.data;
+
+    const req2 = axios.get(url, options2);
+    const res2 = await req2;
+    const user2 = res2.data;
+
+    // const user1 = await ctx.orm.user.findByPk(ping.userId)
+    // const user2 = await ctx.orm.user.findByPk(ping.reciverId)
 
 
     const positions_u1 = await ctx.orm.position.findAll(
@@ -128,7 +179,8 @@ router.get("api.pings.list", "/recieved", async (ctx) => {
     if (!ctx.state.currentUser) {
     ctx.throw(401, 'No iniciaste sesion.');
     }
-    const id = ctx.state.currentUser.id
+    console.log(ctx.state.currentUser);
+    const id = ctx.state.currentUser.sub
     // console.log(id)
     const ping = await ctx.orm.ping.findAll({
         where: {
@@ -143,7 +195,7 @@ router.get("api.pings.sent", "/sent", async (ctx) => {
     if (!ctx.state.currentUser) {
     ctx.throw(401, 'No iniciaste sesion.');
     }
-    const id = ctx.state.currentUser.id
+    const id = ctx.state.currentUser.sub
     // console.log(id)
     const ping = await ctx.orm.ping.findAll({
         where: {

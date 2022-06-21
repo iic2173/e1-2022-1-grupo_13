@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
 var jwt_koa = require('koa-jwt');
 var jwks = require('jwks-rsa');
@@ -22,6 +24,21 @@ function checkAuth(ctx, next) {
 //   }
 //   return next();
 // }
+// const jwtCheck = jwt_koa({
+//   secret: jwks.koaJwtSecret({
+//       cache: true,
+//       rateLimit: true,
+//       jwksRequestsPerMinute: 5,
+//       jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
+// }),
+// audience: [
+//   `${process.env.AUTH0_AUDIENCE}`,
+//   `https://${process.env.AUTH0_DOMAIN}/userinfo`
+// ],
+// issuer: `https://${process.env.AUTH0_DOMAIN}`,
+// algorithms: ['RS256']
+// });
+
 const jwtCheck = jwt_koa({
   secret: jwks.koaJwtSecret({
       cache: true,
@@ -40,14 +57,10 @@ algorithms: ['RS256']
 const getManagementApiJWT = () => {
   var request = require("request");
   return new Promise(function (resolve, reject) {
-      // var options = { method: 'POST',
-      // url: 'https://dev-prxndioi.us.auth0.com/oauth/token',
-      // headers: { 'content-type': 'application/json' },
-      // body: '{"client_id":"boQ5YxN4hJYnGadN7ByBowR2NmfV6cfO","client_secret":"j4D5A8N8AQsX8KczS5Ych87W9nRE6BViZvDbcYZ90HY2IBvzMLnLbINgneaLHRa4","audience":"https://e3-arquisoft.com","grant_type":"client_credentials","scope":"read:users"}' };
       var options = { method: 'POST',
-      url: 'https://dev-prxndioi.us.auth0.com/oauth/token',
+      url: `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
       headers: { 'content-type': 'application/json' },
-      body: '{"client_id":"bzLURlbhbX32iXVYFPo0CSurTajAetb0","client_secret":"WFeXrnlIVVxeUFE6feDp-1olfXXTyG5myvEGYygHc5LpYOwE-UphsAah9OC4vsc-","audience":"https://dev-prxndioi.us.auth0.com/api/v2/","grant_type":"client_credentials","scope":"read:users"}' };
+      body: `{"client_id":"${process.env.AUTH0_CLIENT_ID}","client_secret":"${process.env.AUTH0_CLIENT_SECRET}","audience":"https://${process.env.AUTH0_DOMAIN}/api/v2/","grant_type":"client_credentials","scope":"read:users"}` };
 
       request(options, function (error, response, body) {
       if (error) {

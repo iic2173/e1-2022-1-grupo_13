@@ -1,3 +1,4 @@
+require('dotenv').config();
 const KoaRouter = require('koa-router');
 const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');
 const axios = require('axios');
@@ -30,7 +31,7 @@ router.post('api.pings.create', '/send/:id', async(ctx) => {
             'Content-Type': 'application/json'
         },
         };
-    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
     const req = axios.get(url, options);
     const res = await req;
         // console.log(res.data);
@@ -82,7 +83,7 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
             'Content-Type': 'application/json'
         },
     };
-    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
     const req1 = axios.get(url, options1);
     const res1 = await req1;
     const user1 = res1.data;

@@ -95,7 +95,7 @@ router.post('api.map.create.ping', '/ping', async(ctx) =>{
             'Content-Type': 'application/json'
         },
         };
-    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
     const req = axios.get(url, options);
     const res = await req;
         // console.log(res.data);

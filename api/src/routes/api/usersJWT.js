@@ -1,3 +1,4 @@
+require('dotenv').config();
 const KoaRouter = require('koa-router');
 const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
@@ -73,7 +74,7 @@ router.get("api.users.list", "/", async (ctx) => {
             'Content-Type': 'application/json'
         },
         };
-    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
     try {
         const req = axios.get(url, options);
         const res = await req;
@@ -107,7 +108,7 @@ router.get('api.users.show', '/:id', async(ctx) =>{
             'Content-Type': 'application/json'
         },
         };
-    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
     try {
         const req = axios.get(url, options);
         const res = await req;
@@ -142,7 +143,7 @@ router.get('api.users.indexes', '/indexes/:id', async (ctx) => {
             'Content-Type': 'application/json'
         },
         };
-    const url = "https://dev-prxndioi.us.auth0.com/api/v2/users";
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
     const req = axios.get(url, options);
     const res = await req;
         // console.log(res.data);

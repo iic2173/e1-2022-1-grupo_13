@@ -7,7 +7,7 @@ module.exports = {
       const pos = 'SRID=4326;POINT(-33.498532 -70.614023)'; // Datatype geometry en postgis
 
      positionsArray.push({
-      userId: 2,
+      userId: 'auth0|62b26a570746edfe60cc3525',
       title: 'My university',
       geography: pos,
       createdAt: new Date(),
@@ -17,7 +17,7 @@ module.exports = {
      const pos1 = 'SRID=4326;POINT(40.71598 -74.002881)'; // Datatype geometry en postgis
 
      positionsArray.push({
-      userId: 3,
+      userId: 'auth0|62aa58d993b89ac09d1d71c0',
       title: 'Sanctum Sanctorum',
       geography: pos1,
       createdAt: new Date(),
@@ -27,7 +27,7 @@ module.exports = {
      const pos2 = 'SRID=4326;POINT(30.00944 31.20861)'; // Datatype geometry en postgis
 
      positionsArray.push({
-      userId: 4,
+      userId: 'auth0|62b269aa92d2e26e683da0c9',
       title: 'Piramides de Giza',
       geography: pos2,
       createdAt: new Date(),

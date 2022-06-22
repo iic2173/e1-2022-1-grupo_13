@@ -1,6 +1,7 @@
 from celery import shared_task
 import math
 from collections import Counter
+from workers_backend.mail import send_mail_to
 
 
 
@@ -15,6 +16,8 @@ def handle_request(request):
     user_1 = request["ids"]["user_1"]
     user_2 = request["ids"]["user_2"]
     ping_id = request["ids"]["pingId"]
+    mail_user1 = request["emails"]["email_1"]
+    mail_user2 = request["emails"]["email_2"]
     points_user1 = request["sidi"]["positions_1"]
     points_user2 = request["sidi"]["positions_2"]
     tags_user1 = request["siin"]["tags_1"]
@@ -23,6 +26,9 @@ def handle_request(request):
     result["user_1"] = user_1
     result["user_2"] = user_2
     result["ping_id"] = ping_id
+    message = f'Hola, se han actualizado los indices del ping {ping_id}\n Indice sidi: {result["sidi"]} \
+                Indice siin: {result["siin"]} \n Indice dindin: {result["dindin"]}'
+    send_mail_to(message, recievers=[mail_user1, mail_user2])
 
     return result
 
@@ -65,3 +71,4 @@ def dindin_index(points_user1, points_user2, tags_user1, tags_user2):
     sidi = sidi_index(points_user1, points_user2)
     siin = siin_index(tags_user1, tags_user2)
     return {"dindin": (sidi * siin), "sidi": sidi, "siin": siin}
+

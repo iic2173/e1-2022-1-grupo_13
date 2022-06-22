@@ -44,8 +44,4 @@ DB_NAME=db-api
 DB_USERNAME=root
 DB_PASSWORD=root
 JWT_SECRET='hGTKnBhynVPxo2jGOQwHuAX2x2ZX5X5U'
-AUTH0_DOMAIN='dev-prxndioi.us.auth0.com'
-AUTH0_CLIENT_ID='bzLURlbhbX32iXVYFPo0CSurTajAetb0'
-AUTH0_CLIENT_SECRET='WFeXrnlIVVxeUFE6feDp-1olfXXTyG5myvEGYygHc5LpYOwE-UphsAah9OC4vsc-'
-AUTH0_AUDIENCE='https://e3-arquisoft.com'
 ```

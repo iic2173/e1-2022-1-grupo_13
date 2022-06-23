@@ -98,5 +98,5 @@ module.exports = {
 //   "phone_num": 5610101010,
 //   "nickname": "Vision",
 //   "telegram_user": "@SonofStark",
-//   "password": "thevision"
+//   "password": "The-Vision"
 // }

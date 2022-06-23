@@ -47,7 +47,7 @@ const jwtCheck = jwt_koa({
       jwksUri: 'https://dev-prxndioi.us.auth0.com/.well-known/jwks.json'
 }),
 audience: [
-  "https://e3-arquisoft.com",
+  "https://dev-prxndioi.us.auth0.com/api/v2/",
   "https://dev-prxndioi.us.auth0.com/userinfo"
 ],
 issuer: 'https://dev-prxndioi.us.auth0.com/',
@@ -96,6 +96,7 @@ async function setCurrentUser(ctx, next) {
   // return next();
 
   const authData = ctx.state;
+  console.log(authData);
   const infoCurrentUser = authData.aud[1];
   if (infoCurrentUser) {
     const apiJWT = ctx.get('Authorization').split(' ')[1];

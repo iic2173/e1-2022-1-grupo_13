@@ -31,7 +31,7 @@ module.exports = {
       phone_num: 56980808090,
       nickname: "Dr Stephen Strange",
       telegram_user: "@Its_Strange",
-      password: bcrypt.hashSync("sorcerer", PASSWORD_SALT_ROUNDS),
+      password: bcrypt.hashSync("Sorcerer1", PASSWORD_SALT_ROUNDS),
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -51,7 +51,7 @@ module.exports = {
       phone_num: 56980808010,
       nickname: "Wanda Maximoff",
       telegram_user: "@MissMaximoff",
-      password: bcrypt.hashSync("scarletwitch", PASSWORD_SALT_ROUNDS),
+      password: bcrypt.hashSync("ScarletWitch1", PASSWORD_SALT_ROUNDS),
       createdAt: new Date(),
       updatedAt: new Date(),
     })

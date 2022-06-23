@@ -74,6 +74,7 @@ router.get('api.map.user.positions', '/user/:id', async(ctx) => {
     }
     responseArr.push(sendable_obj);
   };
+  console.log(responseArr);
   ctx.body = responseArr;
 })
 

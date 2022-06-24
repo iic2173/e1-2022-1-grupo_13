@@ -45,8 +45,7 @@ router.post('api.map.create.position', '/new', async(ctx) =>{
     
     const tag = await ctx.orm.tag.findByPk(tags['value']);
     const geography = {"type":"Point","coordinates":[lat,long], crs: { type: 'name', properties: { name: 'EPSG:4326'} }};
-    const position = ctx.orm.position.build({ userId: currentUser.id, title, geography});
-
+    const position = ctx.orm.position.build({ userId: currentUser.sub, title, geography});
     try {
         await position.save();
         await position.addTag(tag);
@@ -64,6 +63,7 @@ router.get('api.map.user.positions', '/user/:id', async(ctx) => {
   const positionsList = await ctx.orm.position.findAll(
     // { where: { userId: currentUser.id } } );
     { where: { userId: ctx.params.id } } );
+
   for (const element of positionsList){
     const tags = await element.getTags()
     let sendable_obj = {

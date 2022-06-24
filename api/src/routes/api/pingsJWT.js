@@ -86,12 +86,12 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
     const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
     const req1 = axios.get(url, options1);
     const res1 = await req1;
-    const user1 = res1.data;
+    
+    const user1 = res1.data[0];
 
     const req2 = axios.get(url, options2);
     const res2 = await req2;
-    const user2 = res2.data;
-
+    const user2 = res2.data[0];
     // const user1 = await ctx.orm.user.findByPk(ping.userId)
     // const user2 = await ctx.orm.user.findByPk(ping.reciverId)
 
@@ -128,7 +128,7 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
 
         const body = { 
             "emails": {'email_1': user1.email, 'email_2': user2.email},
-            "ids": {'user_1': user1.id, 'user_2': user2.id, 'pingId': ping.id },
+            "ids": {'user_1': user1.user_id, 'user_2': user2.user_id, 'pingId': ping.id },
             "sidi": {"positions_1": positions_array_1, "positions_2": positions_array_2},
             "siin" : {"tags_1":tags_array_1, "tags_2": tags_array_2}
             };
@@ -150,17 +150,9 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
         ctx.body = ping;
 
     } catch (ex) {
-        if (ex && ex !== undefined && ex.toString && ex.toString !== undefined) {
-            console.log(ex.toString());
-        }
-        if (
-            ex.response &&
-            ex.response !== undefined &&
-            ex.response.data &&
-            ex.response.data !== undefined
-        ) {
+       
             console.log(ex)
-        }
+
     }
 })
 
@@ -188,7 +180,7 @@ router.get("api.pings.list", "/recieved", async (ctx) => {
             reciverId: id
         }
     });
-    // console.log(ping)
+
     ctx.body = ping;
 })
 

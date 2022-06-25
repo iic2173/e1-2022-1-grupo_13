@@ -199,4 +199,30 @@ router.get('api.users.indexes', '/indexes/:id', async (ctx) => {
 
 })
 
+router.get('api.users.token', '/token', async (ctx) => {
+    const { currentUser } = ctx.state;
+    const apiJWT = await getManagementApiJWT();
+
+    try {
+        // build token
+        const payload = {
+            "aud": "https://chat.nano.net",
+            "iss": "https://api.nano.net",
+            "exp": "99999999999999",
+            "entityUUID": "1",
+            "userUUID": currentUser.sub,
+            "levelOnEntity": "100"
+        }
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET)
+
+        ctx.body = token
+    }
+    catch (ValidationError) {
+        console.log(ValidationError);
+        ctx.throw(400, 'Bad request');
+    }
+
+});
+
 module.exports = router;

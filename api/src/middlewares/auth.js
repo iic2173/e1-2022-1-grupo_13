@@ -96,7 +96,6 @@ async function setCurrentUser(ctx, next) {
   // return next();
 
   const authData = ctx.state;
-  console.log(authData);
   const infoCurrentUser = authData.aud[1];
   if (infoCurrentUser) {
     const apiJWT = ctx.get('Authorization').split(' ')[1];

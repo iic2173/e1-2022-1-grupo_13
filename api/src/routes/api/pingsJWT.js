@@ -172,7 +172,6 @@ router.get("api.pings.list", "/recieved", async (ctx) => {
     if (!ctx.state.currentUser) {
     ctx.throw(401, 'No iniciaste sesion.');
     }
-    console.log(ctx.state.currentUser);
     const id = ctx.state.currentUser.sub
     // console.log(id)
     const ping = await ctx.orm.ping.findAll({

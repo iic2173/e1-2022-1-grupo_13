@@ -1,4 +1,5 @@
 require('dotenv').config();
+const uuidv5 = require('uuid/v5');
 const KoaRouter = require('koa-router');
 const jwt = require('jsonwebtoken');
 const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');
@@ -95,24 +96,19 @@ router.get('api.users.token', '/token', async (ctx) => {
 
     try {
         // build token
+        const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
         const payload = {
             "aud": "https://chat.nano.net",
             "iss": "https://api.nano.net",
-            "exp": 99999999999999123123,
-            "entityUUID": "1",
-            "userUUID": ctx.state.currentUser.sub,
+            "entityUUID": '60b40630-713c-11ec-8cff-7f82f42f57ce',
+            "userUUID": uuidv5(ctx.state.currentUser.sub, MY_NAMESPACE),
             "levelOnEntity": "100"
         }
-        console.log('######################')
-        console.log(payload)
-        console.log('######################')
 
         const token = jwt.sign(payload, process.env.JWT_SECRET)
-        console.log(token)
-        console.log('######################')
 
 
-        ctx.body = token
+        ctx.body = { "token": token } 
     }
     catch (ValidationError) {
         console.log(ValidationError);

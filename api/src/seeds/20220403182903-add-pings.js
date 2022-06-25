@@ -5,15 +5,15 @@ module.exports = {
     const pingsArray = [];
 
     pingsArray.push({
-      userId: 1,
-      reciverId: 2,
+      userId: 'auth0|62b3ead84dd722e042fa16fe',
+      reciverId: 'auth0|62b3dec43ef05cf3b8d8cf74',
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     pingsArray.push({
-      userId: 3,
-      reciverId: 5,
+      userId: 'auth0|62b3dec43ef05cf3b8d8cf74',
+      reciverId: 'auth0|62b3ecaa3ef05cf3b8d8d0f4',
       createdAt: new Date(),
       updatedAt: new Date(),
     })

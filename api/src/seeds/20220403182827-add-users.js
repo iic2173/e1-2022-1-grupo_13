@@ -12,7 +12,7 @@ module.exports = {
       nickname: 'Jerry',
       phone_num: 56990909090,
       telegram_user: '@Jerry_example',
-      password: bcrypt.hashSync('password', PASSWORD_SALT_ROUNDS),
+      password: bcrypt.hashSync('Password123', PASSWORD_SALT_ROUNDS),
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -21,7 +21,7 @@ module.exports = {
       email: 'katty@example.com',
       nickname: 'Katty',
       telegram_user: '@Katty_Olguin',
-      password: bcrypt.hashSync('password', PASSWORD_SALT_ROUNDS),
+      password: bcrypt.hashSync('Password123', PASSWORD_SALT_ROUNDS),
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -31,7 +31,7 @@ module.exports = {
       phone_num: 56980808090,
       nickname: "Dr Stephen Strange",
       telegram_user: "@Its_Strange",
-      password: bcrypt.hashSync("sorcerer", PASSWORD_SALT_ROUNDS),
+      password: bcrypt.hashSync("Sorcerer1", PASSWORD_SALT_ROUNDS),
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -41,7 +41,7 @@ module.exports = {
       phone_num: 56980808080,
       nickname: "Marc Spector",
       telegram_user: "@Moon_Knight",
-      password: bcrypt.hashSync("mercenary", PASSWORD_SALT_ROUNDS),
+      password: bcrypt.hashSync("Mercenary3", PASSWORD_SALT_ROUNDS),
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -51,7 +51,7 @@ module.exports = {
       phone_num: 56980808010,
       nickname: "Wanda Maximoff",
       telegram_user: "@MissMaximoff",
-      password: bcrypt.hashSync("scarletwitch", PASSWORD_SALT_ROUNDS),
+      password: bcrypt.hashSync("ScarletWitch1", PASSWORD_SALT_ROUNDS),
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -98,5 +98,5 @@ module.exports = {
 //   "phone_num": 5610101010,
 //   "nickname": "Vision",
 //   "telegram_user": "@SonofStark",
-//   "password": "thevision"
+//   "password": "The-Vision"
 // }

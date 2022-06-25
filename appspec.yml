@@ -1,14 +1,14 @@
 version: 0.0
 os: linux
 files:
-  - source: /
-    destination: /home/ubuntu/e1-2022-1-grupo_13
+  - source: .
+    destination: /home/ec2-user/e1-2022-1-grupo_13
 hooks:
-  BeforeInstall:
-    - location: scripts/before-install.sh
-      runas: ubuntu
-      timeout: 300
   AfterInstall:
-    - location: scripts/after-install.sh
-      runas: ubuntu
-      timeout: 600
+   - location: setup.sh
+     timeout: 300
+     runas: root
+  ApplicationStart:
+   - location: run.sh
+     timeout: 300
+     runas: root     

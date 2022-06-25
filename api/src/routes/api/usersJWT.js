@@ -1,5 +1,6 @@
 require('dotenv').config();
 const KoaRouter = require('koa-router');
+const jwt = require('jsonwebtoken');
 const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
 const axios = require('axios');

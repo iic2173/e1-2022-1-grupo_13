@@ -71,14 +71,12 @@ router.route({
     query: {
       limit: Joi.number(),
       offset: Joi.number(),
-      accepted: Joi.boolean(),
     },
   },
   handler: async (ctx) => {
     const rooms = await ctx.orm.Room_permission.findAll({
       where: {
         entity_UUID: ctx.state.tokendata.userUUID,
-        accepted: ctx.request.query.accepted,
       },
       limit: ctx.request.query.limit,
       offset: ctx.request.query.offset,
@@ -154,12 +152,15 @@ router.route({
       entity_UUID: ctx.state.tokendata.userUUID,
       level: ctx.state.tokendata.levelOnEntity,
       permissions: 'rwa',
+      accepted: true,
     };
     const baseEntityPermission = {
       room_id: room.id,
       entity_UUID: ctx.state.tokendata.entityUUID,
       level: 100,
       permissions: 'rw',
+      accepted: true,
+
     };
     await ctx.orm.Room_permission.create(baseUserPermission);
     await ctx.orm.Room_permission.create(baseEntityPermission);

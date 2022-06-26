@@ -7,16 +7,16 @@ services:
     env_file: 
       - ./.env_db
     ports:
-      - "5432:5432"
-  api:
+      - "5400:5400"
+  chat:
     build:
-      context: api
+      context: chat
       dockerfile: Dockerfile.dev
-    container_name: api
+    container_name: chat
     restart: always
     volumes:
-      - /usr/src/api/node_modules
-      - ./api/:/usr/src/api
+      - /usr/src/chat/node_modules
+      - ./chat/:/usr/src/chat
     ports:
       - "7777:7777"
       - "9229:9229"

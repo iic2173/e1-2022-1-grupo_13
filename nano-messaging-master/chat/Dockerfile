@@ -1,6 +1,6 @@
 FROM node:12
 
-WORKDIR /usr/src/api
+WORKDIR /usr/src/chat
 
 COPY package*.json ./
 

@@ -213,9 +213,9 @@ wsrouter.all('/chat', async (ctx) => {
     } else if (command.type === 'select_room') {
       roomIDTarget = await authorizeMessageToRoom(ctx, command, actualUser);
       if (roomIDTarget === 0) {
-        ctx.websocket.send('{"type":"status","data":"NOTAUTHORIZED"');
+        ctx.websocket.send('{"type":"status","data":"NOTAUTHORIZED"}');
       } else {
-        ctx.websocket.send('{"type":"status","data":"CONNECTED"');
+        ctx.websocket.send('{"type":"status","data":"CONNECTED"}');
         redisClientSub.unsubscribe('*'); // Test this
         redisClientSub.subscribe(`room-${roomIDTarget}`);
       }
@@ -223,7 +223,7 @@ wsrouter.all('/chat', async (ctx) => {
       if (roomIDTarget > 0) {
         const msg = {
           room_id: roomIDTarget,
-          content: command.content,
+          content: command.msg,
           emitter: actualUser.userUUID,
         };
         await ctx.orm.Message.create(msg);

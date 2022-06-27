@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.INTEGER,
     sidi: DataTypes.DOUBLE,
     siin: DataTypes.DOUBLE,
-    dindin: DataTypes.DOUBLE
+    dindin: DataTypes.DOUBLE,
+    room_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'ping',

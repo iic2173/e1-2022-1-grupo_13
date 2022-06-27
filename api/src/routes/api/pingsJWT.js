@@ -63,6 +63,9 @@ router.post('api.pings.create', '/send/:id', async(ctx) => {
 router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
     
     const ping = await ctx.orm.ping.findByPk(ctx.params.id);
+    const { room_id } = ctx.request.body;
+    console.log('########')
+    console.log(ctx.request.body)
 
     const apiJWT = await getManagementApiJWT();
     const options1 = { 
@@ -146,7 +149,7 @@ router.patch('api.pings.accept', '/:id/accept', async (ctx) => {
         const siin = response.data['siin'];
         const dindin = response.data['dindin'];
 
-        await ping.update({ status: 1, sidi: sidi, siin: siin, dindin: dindin })
+        await ping.update({ room_id: room_id, status: 1, sidi: sidi, siin: siin, dindin: dindin })
         ctx.body = ping;
 
     } catch (ex) {
@@ -172,7 +175,6 @@ router.get("api.pings.list", "/recieved", async (ctx) => {
     if (!ctx.state.currentUser) {
     ctx.throw(401, 'No iniciaste sesion.');
     }
-    console.log(ctx.state.currentUser);
     const id = ctx.state.currentUser.sub
     // console.log(id)
     const ping = await ctx.orm.ping.findAll({

@@ -74,7 +74,6 @@ router.get('api.map.user.positions', '/user/:id', async(ctx) => {
     }
     responseArr.push(sendable_obj);
   };
-  console.log(responseArr);
   ctx.body = responseArr;
 })
 
@@ -108,8 +107,6 @@ router.post('api.map.create.ping', '/ping', async(ctx) =>{
         ctx.throw(404, 'El usuario que trata de contactar no existe');
     }
     const friend = res.data;
-    console.log(currentUser);
-    console.log(friend);
     const ping = ctx.orm.ping.build({ userId: currentUser.sub, reciverId: friend.user_id});
       try {
         await ping.save();

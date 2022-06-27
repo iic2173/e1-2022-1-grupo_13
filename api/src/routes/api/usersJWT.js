@@ -1,5 +1,5 @@
 require('dotenv').config();
-const uuidv5 = require('uuid/v5');
+const {v5: uuidv5} = require('uuid');
 const KoaRouter = require('koa-router');
 const jwt = require('jsonwebtoken');
 const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');

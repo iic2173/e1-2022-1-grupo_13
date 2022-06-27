@@ -1,14 +1,23 @@
+require('dotenv').config();
+const {v5: uuidv5} = require('uuid');
 const KoaRouter = require('koa-router');
-
+const jwt = require('jsonwebtoken');
+const { jwtCheck, getManagementApiJWT, setCurrentUser, decodeJWT } = require('../../middlewares/auth');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer
+const axios = require('axios');
 
 const UserSerializer = new JSONAPISerializer( 'user', {
     attributes: ['email', 'nickname', 'phone_num', 'telegram_user', 'password'],
     keyForAttribute: 'camelCase',
 });
 
+const apiSerializer = new JSONAPISerializer( 'users', {
+    attributes: ['email', 'nickname', 'user_id'],
+    keyForAttribute: 'camelCase',
+});
+
 const nodemailer = require('nodemailer');
-const { setCurrentUser } = require('../../middlewares/auth');
+// const { setCurrentUser } = require('../../middlewares/auth');
 
 const transporter = nodemailer.createTransport({
     service: "hotmail",
@@ -27,8 +36,6 @@ router.post('api.users.create', '/', async(ctx) => {
         ctx.status = 201;
         ctx.body = UserSerializer.serialize(user);
         ctx.body = user;
-        console.log("###");
-        console.log(user.email);
         const options = {
             from: "grupo13arquisoft@outlook.cl",
             to: user.email,
@@ -47,25 +54,136 @@ router.post('api.users.create', '/', async(ctx) => {
     }
 });
 
+router.use(jwtCheck);
+
+router.use(decodeJWT);
+// router.use(jwt({ secret: process.env.JWT_SECRET, key: 'authData' }))
+router.use(setCurrentUser);
+
 router.get("api.users.list", "/", async (ctx) => {
-    const users = await ctx.orm.user.findAll();
-    ctx.body = UserSerializer.serialize(users);
-    ctx.body = users;
+    // const users = await ctx.orm.user.findAll();
+    // ctx.body = UserSerializer.serialize(users);
+    // ctx.body = users;
+    const apiJWT = await getManagementApiJWT();
+    const options = { 
+        // method: "GET",
+        // url: "https://dev-prxndioi.us.auth0.com/api/v2/users",
+        headers: { 
+            'Authorization' : `Bearer ${apiJWT.access_token}`,
+            'Content-Type': 'application/json'
+        },
+        };
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
+    try {
+        const req = axios.get(url, options);
+        const res = await req;
+        // ctx.status = 201;
+        
+        ctx.body = apiSerializer.serialize(res.data);
 
-})
+    }
+    catch (ValidationError) {
+        console.log(ValidationError);
+        ctx.throw(400, 'Bad request');
+    }
+});
 
+router.get('api.users.token', '/token', async (ctx) => {
+    console.log('###########;#######');
+    console.log(ctx.state.currentUser);
+    console.log('##################');
+
+
+    try {
+        // build token
+        const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
+        const payload = {
+            "aud": "https://chat.nano.net",
+            "iss": "https://api.nano.net",
+            "entityUUID": '60b40630-713c-11ec-8cff-7f82f42f57ce',
+            "userUUID": uuidv5(ctx.state.currentUser.sub, MY_NAMESPACE),
+            "levelOnEntity": "100"
+        }
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET)
+
+
+        ctx.body = { "token": token } 
+    }
+    catch (ValidationError) {
+        console.log(ValidationError);
+        ctx.throw(400, 'Bad request');
+        console.log('xczczxcxzczxczxcxzczxczx')
+    }
+
+});
 
 router.get('api.users.show', '/:id', async(ctx) =>{
-    const user = await ctx.orm.user.findByPk(ctx.params.id);
-    if (!user) {
-        ctx.throw(404, 'El usuario buscado no existe');
+    // const user = await ctx.orm.user.findByPk(ctx.params.id);
+    // if (!user) {
+    //     ctx.throw(404, 'El usuario buscado no existe');
+    // }
+    // ctx.body = UserSerializer.serialize(user);
+
+    const authId = ctx.params.id;
+    const apiJWT = await getManagementApiJWT();
+    const options = { 
+        // method: "GET",
+        // url: "https://dev-prxndioi.us.auth0.com/api/v2/users",
+        params: {q: `user_id:"${authId}"`, search_engine: 'v3'},
+        headers: { 
+            'Authorization' : `Bearer ${apiJWT.access_token}`,
+            'Content-Type': 'application/json'
+        },
+        };
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
+    try {
+        const req = axios.get(url, options);
+        const res = await req;
+        // ctx.status = 201;
+        // ctx.body = apiSerializer.serialize(res.data);
+        if (res.data.length == 0) {
+            ctx.throw(400, 'que hago aqui')//, 'El usuario buscado no existe');
+        }
+        // else {
+        //     // ctx.status = 201;
+        ctx.body = apiSerializer.serialize(res.data);
+        // }
     }
-    ctx.body = UserSerializer.serialize(user);
+    catch (ValidationError) {
+        console.log(ValidationError);
+        ctx.throw(400, 'Bad request');
+
+
+    }
 });
 
 router.get('api.users.indexes', '/indexes/:id', async (ctx) => {
     const { currentUser } = ctx.state;
-    const user2 = await ctx.orm.user.findByPk(ctx.params.id);
+    // const user2 = await ctx.orm.user.findByPk(ctx.params.id);
+    const apiJWT = await getManagementApiJWT();
+    const options = { 
+        // method: "GET",
+        // url: "https://dev-prxndioi.us.auth0.com/api/v2/users",
+        params: {q: `user_id:"${ctx.params.id}"`, search_engine: 'v3'},
+        headers: { 
+            'Authorization' : `Bearer ${apiJWT.access_token}`,
+            'Content-Type': 'application/json'
+        },
+        };
+    const url = `https://${process.env.AUTH0_DOMAIN}/api/v2/users`;
+    const req = axios.get(url, options);
+    const res = await req;
+        // console.log(res.data);
+        // console.log(apiSerializer.serialize(res.data).data);
+        // ctx.status = 201;
+        // ctx.body = apiSerializer.serialize(res.data);
+    if (res.data.length == 0) {
+        console.log('IN')
+        ctx.throw(404, 'El usuario que trata de contactar no existe');
+    }
+
+    const user2 = res.data;
 
     let tags_array_1 = []
     let tags_array_2 = []
@@ -102,11 +220,13 @@ router.get('api.users.indexes', '/indexes/:id', async (ctx) => {
     })
 
     ctx.body = { 
-        "ids": {'user_1': currentUser.id, 'user_2': user2.id, 'pingId': ping.id },
+        "ids": {'user_1': currentUser.sub, 'user_2': user2.user_id, 'pingId': ping.id },
         "sidi": {"positions_1": positions_array_1, "positions_2": positions_array_2},
         "siin" : {"tags_1":tags_array_1, "tags_2": tags_array_2}
         };
 
-})
+});
+
+
 
 module.exports = router;

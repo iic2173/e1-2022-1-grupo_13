@@ -53,6 +53,7 @@
     "dotenv": "^16.0.0",
     "jsonapi-serializer": "^3.6.7",
     "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.1.4",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-ejs": "^4.3.0",
@@ -71,8 +72,10 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.21",
+    "request": "^2.88.2",
     "sequelize": "^6.3.5",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "uuid": "^8.3.2"
   },
   "engines": {
     "node": "10.x || 12.x",

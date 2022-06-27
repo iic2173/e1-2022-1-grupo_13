@@ -11,14 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.user);
+      // this.belongsTo(models.user);
       this.belongsToMany(models.tag, {
         through: 'position_tags',
       });
     }
   };
   position.init({
-    userId: DataTypes.INTEGER,
+    // userId: DataTypes.INTEGER,
+    userId: DataTypes.STRING,
     title: DataTypes.STRING,
     geography: DataTypes.GEOMETRY('POINT', 4326)
   }, {

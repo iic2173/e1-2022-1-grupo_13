@@ -11,16 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.user);
+      // this.belongsTo(models.user);
     }
   }
   ping.init({
-    userId: DataTypes.INTEGER,
-    reciverId: DataTypes.INTEGER,
+    // userId: DataTypes.INTEGER,
+    // reciverId: DataTypes.INTEGER,
+    userId: DataTypes.STRING,
+    reciverId: DataTypes.STRING,
     status: DataTypes.INTEGER,
     sidi: DataTypes.DOUBLE,
     siin: DataTypes.DOUBLE,
-    dindin: DataTypes.DOUBLE
+    dindin: DataTypes.DOUBLE,
+    room_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'ping',

@@ -6,6 +6,9 @@ FROM node:12.22.11-alpine
 
 WORKDIR /api
 
+ENV DD_APM_ENABLED=true
+ENV DD_API_KEY=6dd5a1751640771b22bc410ad13552c1
+ENV DD_APPSEC_ENABLED=true
 
 COPY package*.json ./
 

@@ -75,7 +75,8 @@
     "request": "^2.88.2",
     "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "dd-trace": "^1.0.0"
   },
   "engines": {
     "node": "10.x || 12.x",

@@ -14,6 +14,8 @@ const mailer = require('./mailers');
 const routes = require('./routes');
 const api = require('./routes/api')
 const orm = require('./models');
+const tracer = require('dd-trace').init();
+
 
 // App constructor
 const app = new Koa();

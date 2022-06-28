@@ -11,7 +11,7 @@ services:
   chat:
     build:
       context: chat
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: chat
     restart: always
     volumes:

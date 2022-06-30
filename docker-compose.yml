@@ -130,25 +130,40 @@ services:
     networks:
       - app-network
 
-
-  flower:
-    container_name: 'flower'
-    build:
-      context: ./django-celery-project
-      dockerfile: ./compose/local/django/Dockerfile
-    image: workers_backend_celery_flower
-    command: /start-flower
+  db_chat:
+    image: postgres:13
     volumes:
-      - .:/app
-    env_file:
-      - ./django-celery-project/.env
+      - messagingDB:/var/lib/postgresql/data
+    env_file: 
+      - ./nano-messaging-master/.env_db
     ports:
-      - 5557:5555
+      - "5400:5400"
+  chat:
+    build:
+      context: ./nano-messaging-master/chat
+      dockerfile: Dockerfile
+    container_name: chat
+    restart: always
+    volumes:
+      - /usr/src/chat/node_modules
+      - ./nano-messaging-master/chat/:/usr/src/chat
+    ports:
+      - "7777:7777"
+      - "9229:9229"
+    command:
+      "npm run debug"
+    env_file: 
+      - ./nano-messaging-master/.env
+    environment:
+      - DUMMY=0
     depends_on:
-      - redis
-      - db_workers
-    networks:
-      - app-network
+      - db_chat
+      - pubsub
+  pubsub:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
 
 
 networks:
@@ -156,6 +171,6 @@ networks:
     driver: bridge
 
 volumes:
+  messagingDB:
   postgres_data:
   postgres_data_workers:
-    
